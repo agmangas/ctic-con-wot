@@ -1,5 +1,8 @@
 FROM python:3.8-buster
 
+ARG REACT_APP_MQTT_URL=mqtt://localhost:9001
+ENV REACT_APP_MQTT_URL $REACT_APP_MQTT_URL
+
 ENV PATH_APP /opt/app
 
 RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
