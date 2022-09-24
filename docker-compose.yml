@@ -1,4 +1,16 @@
 services:
+  sensors-app:
+    build:
+      context: sensors-app
+    ports:
+      - "${SENSORS_APP_PORT}:5000"
+    restart: on-failure
+    environment:
+      SECRET: ${SENSORS_APP_SECRET:-supersecret}
+      LOG_LEVEL: ${SENSORS_LOG_LEVEL:-DEBUG}
+    depends_on:
+      - influx
+      - mosquitto
   influx:
     image: influxdb:2.4.0
     ports:
