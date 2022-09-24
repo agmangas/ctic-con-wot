@@ -1,0 +1,63 @@
+services:
+  influx:
+    image: influxdb:2.4.0
+    ports:
+      - "${INFLUX_PORT}:8086"
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "influx", "ping"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    volumes:
+      - type: volume
+        source: influx_data
+        target: /var/lib/influxdb2
+  influx-setup:
+    image: influxdb:2.4.0
+    command:
+      - /bin/bash
+      - /opt/init-influx.sh
+    environment:
+      INFLUX_BUCKET: ${INFLUX_BUCKET}
+      INFLUX_ORG: ${INFLUX_ORG}
+      INFLUX_USER: ${INFLUX_USER}
+      INFLUX_PASS: ${INFLUX_PASS}
+      INFLUX_TOKEN: ${INFLUX_TOKEN}
+    depends_on:
+      - influx
+    restart: on-failure
+    volumes:
+      - type: bind
+        source: ./init-influx.sh
+        target: /opt/init-influx.sh
+        read_only: true
+  mosquitto:
+    image: agmangas/mosquitto-websockets:latest
+    ports:
+      - "${MOSQUITTO_PORT_TCP:-1883}:1883"
+      - "${MOSQUITTO_PORT_WEB:-9001}:9001"
+    restart: on-failure
+  grafana:
+    image: grafana/grafana-oss:9.0.9
+    ports:
+      - "${GRAFANA_PORT:-3000}:3000"
+    environment:
+      INFLUX_BUCKET: ${INFLUX_BUCKET}
+      INFLUX_ORG: ${INFLUX_ORG}
+      INFLUX_TOKEN: ${INFLUX_TOKEN}
+    depends_on:
+      - influx
+      - mosquitto
+    restart: on-failure
+    volumes:
+      - type: bind
+        source: ./datasource-influx.yml
+        target: /etc/grafana/provisioning/datasources/influx.yml
+        read_only: true
+      - type: volume
+        source: grafana_data
+        target: /var/lib/grafana
+volumes:
+  influx_data:
+  grafana_data:
