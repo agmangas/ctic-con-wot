@@ -2,7 +2,7 @@ include .env.default
 export $(shell sed 's/=.*//' .env.default)
 
 ifneq (,$(wildcard ./.env.local))
-	include .env
+	include .env.local
 	export $(shell sed 's/=.*//' .env.local)
 endif
 
