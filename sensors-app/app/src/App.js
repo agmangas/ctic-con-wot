@@ -5,7 +5,7 @@ import { nanoid } from "nanoid";
 import React, { useCallback, useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Button, Col, Container, Row, Alert } from "reactstrap";
+import { Alert, Button, Col, Container, Row } from "reactstrap";
 import UAParser from "ua-parser-js";
 import "./App.css";
 import { LoadingSpinner } from "./LoadingSpinner";
@@ -25,7 +25,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [mqttClient, setMqttClient] = useState(undefined);
   const [numClicks, setNumClicks] = useState(0);
-  const [numOrientations, setNumOrientations] = useState(0);
+  const [currOrientation, setCurrOrientation] = useState(undefined);
   const [errorAcc, setErrorAcc] = useState(undefined);
 
   useEffect(() => {
@@ -79,12 +79,16 @@ function App() {
         fields: { alpha: event.alpha, beta: event.beta, gamma: event.gamma },
       });
 
-      setNumOrientations(numOrientations + 1);
+      setCurrOrientation({
+        alpha: event.alpha,
+        beta: event.beta,
+        gamma: event.gamma,
+      });
 
       console.log(TOPIC_ORIENTATION, meas);
       mqttClient.publish(TOPIC_ORIENTATION, JSON.stringify(meas));
     },
-    [mqttClient, buildMeasurement, numOrientations]
+    [mqttClient, buildMeasurement]
   );
 
   useEffect(() => {
@@ -164,9 +168,13 @@ function App() {
           <Alert className="mt-3 me-5 ms-5" color="secondary">
             Número de clicks: <strong>{numClicks}</strong>
           </Alert>
-          <Alert className="mt-3 me-5 ms-5" color="secondary">
-            Cambios de orientación: <strong>{numOrientations}</strong>
-          </Alert>
+          {!!currOrientation && (
+            <Alert className="mt-3 me-5 ms-5" color="secondary">
+              Alpha: <strong>{currOrientation.alpha}</strong> &nbsp; Beta:{" "}
+              <strong>{currOrientation.beta}</strong> &nbsp; Gamma:{" "}
+              <strong>{currOrientation.gamma}</strong>
+            </Alert>
+          )}
           {!!errorAcc && (
             <Alert className="mt-3 me-5 ms-5" color="warning">
               😭😭 &nbsp; {errorAcc}
