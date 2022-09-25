@@ -170,9 +170,11 @@ function App() {
           </Alert>
           {!!currOrientation && (
             <Alert className="mt-3 me-5 ms-5" color="secondary">
-              Alpha: <strong>{currOrientation.alpha}</strong> &nbsp; Beta:{" "}
-              <strong>{currOrientation.beta}</strong> &nbsp; Gamma:{" "}
-              <strong>{currOrientation.gamma}</strong>
+              Alpha: <strong>{_.round(currOrientation.alpha, 2)}</strong>
+              <br />
+              Beta: <strong>{_.round(currOrientation.beta, 2)}</strong>
+              <br />
+              Gamma: <strong>{_.round(currOrientation.gamma, 2)}</strong>
             </Alert>
           )}
           {!!errorAcc && (
