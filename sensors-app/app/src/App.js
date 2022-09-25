@@ -96,10 +96,12 @@ function App() {
       return () => {};
     }
 
-    window.addEventListener("deviceorientation", handleOrientation);
+    const throttledHandler = _.throttle(handleOrientation, 200);
+
+    window.addEventListener("deviceorientation", throttledHandler);
 
     return () => {
-      window.removeEventListener("deviceorientation", handleOrientation);
+      window.removeEventListener("deviceorientation", throttledHandler);
     };
   }, [mqttClient, handleOrientation]);
 
