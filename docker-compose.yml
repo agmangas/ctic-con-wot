@@ -46,6 +46,27 @@ services:
         source: ./init-influx.sh
         target: /opt/init-influx.sh
         read_only: true
+  telegraf:
+    image: telegraf:1.22
+    command:
+      - /usr/bin/telegraf
+      - --config
+      - /opt/telegraf.conf
+    restart: on-failure
+    depends_on:
+      - influx
+      - mosquitto
+    environment:
+      INFLUX_BUCKET: ${INFLUX_BUCKET}
+      INFLUX_ORG: ${INFLUX_ORG}
+      INFLUX_USER: ${INFLUX_USER}
+      INFLUX_PASS: ${INFLUX_PASS}
+      INFLUX_TOKEN: ${INFLUX_TOKEN}
+    volumes:
+      - type: bind
+        source: ./telegraf.conf
+        target: /opt/telegraf.conf
+        read_only: true
   mosquitto:
     image: agmangas/mosquitto-websockets:latest
     ports:

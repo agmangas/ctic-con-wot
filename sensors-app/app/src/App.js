@@ -2,23 +2,24 @@ import "bootstrap/dist/css/bootstrap.css";
 import _ from "lodash";
 import mqtt from "mqtt/dist/mqtt";
 import { nanoid } from "nanoid";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Col, Container, Row } from "reactstrap";
+import UAParser from "ua-parser-js";
 import "./App.css";
 import { LoadingSpinner } from "./LoadingSpinner";
 
 const MQTT_URL = process.env.REACT_APP_MQTT_URL || "mqtt://localhost:9001";
+const NAME_ORIENTATION = "orientation";
+const NAME_ACCELERATION = "acceleration";
 const TOPIC_NEW_CLIENT = "sensors-app/clients";
+const TOPIC_ORIENTATION = "sensors-app/orientation";
+const TOPIC_ACCELERATION = "sensors-app/acceleration";
 
 function App() {
   const [uniqueId, _setUniqueId] = useState(nanoid());
-
-  const [navigatorInfo, _setNavigatorInfo] = useState(
-    _.toPlainObject(navigator)
-  );
-
+  const [browserInfo, _setBrowserInfo] = useState(_.toPlainObject(UAParser()));
   const [isLoading, setIsLoading] = useState(false);
   const [mqttClient, setMqttClient] = useState(undefined);
 
@@ -39,10 +40,57 @@ function App() {
       return;
     }
 
-    const clientInfo = { [uniqueId]: navigatorInfo };
+    const clientInfo = { [uniqueId]: browserInfo };
     console.log("Client", clientInfo);
     mqttClient.publish(TOPIC_NEW_CLIENT, JSON.stringify(clientInfo));
-  }, [mqttClient]);
+  }, [mqttClient, uniqueId, browserInfo]);
+
+  const buildMeasurement = useCallback(
+    ({ name, fields }) => {
+      return Object.assign(
+        {
+          name,
+          time: Date.now(),
+          device: uniqueId,
+          tag_browser: browserInfo.browser.name,
+          tag_os: browserInfo.os.name,
+          tag_vendor: browserInfo.device.vendor,
+          tag_model: browserInfo.device.model,
+        },
+        fields
+      );
+    },
+    [uniqueId, browserInfo]
+  );
+
+  const handleOrientation = useCallback(
+    (event) => {
+      if (!mqttClient) {
+        return;
+      }
+
+      const meas = buildMeasurement({
+        name: NAME_ORIENTATION,
+        fields: { alpha: event.alpha, beta: event.beta, gamma: event.gamma },
+      });
+
+      console.log(TOPIC_ORIENTATION, meas);
+      mqttClient.publish(TOPIC_ORIENTATION, JSON.stringify(meas));
+    },
+    [mqttClient, buildMeasurement]
+  );
+
+  useEffect(() => {
+    if (!mqttClient) {
+      return () => {};
+    }
+
+    window.addEventListener("deviceorientation", handleOrientation);
+
+    return () => {
+      window.removeEventListener("deviceorientation", handleOrientation);
+    };
+  }, [mqttClient, handleOrientation]);
 
   useEffect(() => {
     if (!mqttClient) {
@@ -54,12 +102,16 @@ function App() {
       return;
     }
 
-    let theSensor = new window.LinearAccelerationSensor({ frequency: 1 });
+    let theSensor = new window.LinearAccelerationSensor({ frequency: 10 });
 
-    theSensor.addEventListener("reading", (e) => {
-      console.log(`Linear acceleration along the X-axis ${theSensor.x}`);
-      console.log(`Linear acceleration along the Y-axis ${theSensor.y}`);
-      console.log(`Linear acceleration along the Z-axis ${theSensor.z}`);
+    theSensor.addEventListener("reading", (event) => {
+      const meas = buildMeasurement({
+        name: NAME_ACCELERATION,
+        fields: { x: event.x, y: event.y, z: event.z },
+      });
+
+      console.log(TOPIC_ACCELERATION, meas);
+      mqttClient.publish(TOPIC_ACCELERATION, JSON.stringify(meas));
     });
 
     theSensor.addEventListener("error", (e) => {
@@ -67,30 +119,7 @@ function App() {
     });
 
     theSensor.start();
-  }, [mqttClient]);
-
-  useEffect(() => {
-    if (!mqttClient) {
-      return;
-    }
-
-    if (!window.AmbientLightSensor) {
-      console.warn("AmbientLightSensor is unavailable");
-      return;
-    }
-
-    let theSensor = new window.AmbientLightSensor({ frequency: 1 });
-
-    theSensor.addEventListener("reading", (e) => {
-      console.log(e);
-    });
-
-    theSensor.addEventListener("error", (e) => {
-      console.warn("AmbientLightSensor", e.error);
-    });
-
-    theSensor.start();
-  }, [mqttClient]);
+  }, [mqttClient, buildMeasurement]);
 
   return (
     <Container fluid={true} className="d-flex h-100">
