@@ -13,6 +13,17 @@ services:
     depends_on:
       - influx
       - mosquitto
+  agent:
+    build:
+      context: agent
+    restart: on-failure
+    environment:
+      LOG_LEVEL: ${AGENT_LOG_LEVEL:-DEBUG}
+      MQTT_HOST: mosquitto
+      MQTT_PORT: 9001
+    depends_on:
+      - influx
+      - mosquitto
   influx:
     image: influxdb:2.4.0
     ports:
