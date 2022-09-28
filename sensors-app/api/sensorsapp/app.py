@@ -10,6 +10,7 @@ from flask_cors import CORS
 from werkzeug.exceptions import HTTPException, NotFound
 
 import sensorsapp.info
+import sensorsapp.slack
 
 _STATIC_FOLDER = "appjs"
 _STATIC_URL_PATH = ""
@@ -17,6 +18,7 @@ _DEFAULT_SECRET = "secret"
 _ENV_LOG_LEVEL = "LOG_LEVEL"
 _ENV_SECRET = "SECRET"
 _PREFIX_INFO = "/api/info"
+_SLACK_INFO = "/api/slack"
 
 _logger = logging.getLogger(__name__)
 
@@ -105,6 +107,7 @@ def create_app(test_config=None):
         pass
 
     app.register_blueprint(sensorsapp.info.blueprint, url_prefix=_PREFIX_INFO)
+    app.register_blueprint(sensorsapp.slack.blueprint, url_prefix=_SLACK_INFO)
 
     app.add_url_rule("/", view_func=_catch_all, defaults={"path": ""})
     app.add_url_rule("/<path:path>", view_func=_catch_all)
