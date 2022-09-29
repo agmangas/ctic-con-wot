@@ -1,6 +1,8 @@
 <script>
   import Slides from './lib/Slides.svelte';
   import CatInDanger from './lib/CatInDanger.svelte';
+  
+  const MQTT_URL = import.meta.env.VITE_SLIDES_APP_MQTT_URL || "ws://localhost:9001";
 </script>
 
 <div class="container">
@@ -8,7 +10,7 @@
     <CatInDanger />
   </div>
   <div class="center-item">
-    <Slides />
+    <Slides mqttURL={MQTT_URL}/>
   </div>
 </div>
 

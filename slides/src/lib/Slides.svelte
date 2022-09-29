@@ -1,18 +1,41 @@
 <script>
   import Reveal from "reveal.js";
   import { onMount } from "svelte";
+  import * as mqtt from "mqtt"
 
-  let deck_canvas;
+  const TOPIC_SLIDES_COMMAND = "slides/command";
 
+  export let mqttURL = "ws://test.mosquitto.org";
+  console.log(mqttURL)
+
+  const client = mqtt.connect(mqttURL);
+
+  client.on("connect", () => {
+    console.log("MQTT", client);
+    client.subscribe(TOPIC_SLIDES_COMMAND, (err)=>{
+      if (!err) {
+        console.log("Subscribed");
+      }
+    });
+  })
+
+  client.on('message', function (topic, message) {
+    if (topic == TOPIC_SLIDES_COMMAND){
+      console.log(message.toString());
+      window.postMessage(message.toString());
+    }
+  })
+  // Initalize deck canvas
+  let deckCanvas;
   onMount(() => {
-    let deck = Reveal(deck_canvas, {
+    let deck = Reveal(deckCanvas, {
       minScale: 0.2,
     });
     deck.initialize();
   });
 </script>
 
-<div class="reveal" bind:this={deck_canvas}>
+<div class="reveal" bind:this={deckCanvas}>
   <div class="slides">
     <section>
       <h1>WoT</h1>

@@ -1,14 +1,14 @@
 <script>
-    import cat from '/src/assets/cat.png';
-    import train from '/src/assets/train.png';
+    import cat_sprite from '/src/assets/cat.png';
+    import train_sprite from '/src/assets/train.png';
 </script>
 
 <div class="container">
     <div class="train-wrapper">
-        <img class="train" src={train} alt="train drawing"/>
+        <img class="train" src={train_sprite} alt="train drawing"/>
     </div>
     <div class="cat-wrapper">
-        <img class="cat" src={cat} alt="train drawing"/>
+        <img class="cat" src={cat_sprite} alt="train drawing"/>
     </div>
 </div>
 
