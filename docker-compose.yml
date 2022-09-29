@@ -10,6 +10,10 @@ services:
     environment:
       SECRET: ${SENSORS_APP_SECRET:-supersecret}
       LOG_LEVEL: ${SENSORS_LOG_LEVEL:-DEBUG}
+      MQTT_BROKER: ${MQTT_BROKER}
+      MQTT_PORT: ${MOSQUITTO_PORT_WEBSOCKET}
+      MQTT_TRANSPORT: ${MQTT_TRANSPORT}
+      MQTT_TOPICS: ${MOSQUITTO_TOPIC}
     depends_on:
       - influx
       - mosquitto
