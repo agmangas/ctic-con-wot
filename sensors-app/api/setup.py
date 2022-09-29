@@ -15,6 +15,7 @@ setup(
         "gunicorn[eventlet]==20.1.0",
         "jsonschema[format]==4.2.1",
         "arrow==1.2.1",
+        "paho-mqtt==1.6.1"
     ],
     extras_require={"dev": ["black", "pylint", "rope", "pytest", "freezegun"]},
     entry_points={"console_scripts": []},
