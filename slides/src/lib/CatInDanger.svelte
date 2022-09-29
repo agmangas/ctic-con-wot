@@ -1,42 +1,77 @@
 <script>
-    import cat_sprite from '/src/assets/cat.png';
-    import train_sprite from '/src/assets/train.png';
+    import catSprite from '/src/assets/cat.png';
+    import trainSprite from '/src/assets/train.png';
+    import anime from 'animejs/lib/anime.es.js';
+    import { onMount } from 'svelte';
+
+    const TIME_TO_DEATH = 61e3;
+
+    // Binded to elements in the DOM
+    let trainWrapperEl;
+    let trainEl;
+    let catLabelEl;
+
+    let countdown = "100%";
+    let progress = 0;
+
+    onMount(()=>{
+        anime({
+            targets: trainWrapperEl,
+            top: "100%",
+            translateY: "-100%",
+            duration: TIME_TO_DEATH,
+            easing: 'linear',
+            update: function(anim) {
+                let secondsToDeath = (anim.duration - (anim.duration * anim.progress / 100.0)) / 1e3;
+                let seconds = Math.floor(secondsToDeath % 60);
+                let minutes = Math.floor(secondsToDeath / 60.0);
+                countdown = `${minutes}:${("0" + seconds).slice(-2)}`;
+            }
+        });
+        anime({
+            targets: trainEl,
+            scaleX: ["1.05","0.9"],
+            loop: true,
+            direction: 'alternate',
+            easing: 'linear',
+        });
+
+        anime({
+            targets: ".cat",
+            scale: ["1.05","0.9"],
+            rotate: ['10deg', '-10deg'],
+            loop: true,
+            direction: 'alternate',
+            easing: 'linear',
+        });
+    })
+
+    
 </script>
 
 <div class="container">
-    <div class="train-wrapper">
-        <img class="train" src={train_sprite} alt="train drawing"/>
+    <div class="train-track">
+        <p bind:this={catLabelEl} class="cat-label">{countdown}</p>
+        <div bind:this={trainWrapperEl} class="train-wrapper">
+            <img bind:this={trainEl} class="train" src={trainSprite} alt="train drawing"/>
+        </div>
     </div>
     <div class="cat-wrapper">
-        <img class="cat" src={cat_sprite} alt="train drawing"/>
+        <img class="cat" src={catSprite} alt="train drawing"/>
     </div>
 </div>
 
 <style>
-@keyframes crying-cat {
-  0%   {width: 96%; transform: rotate(1deg);}
-  25% {width: 100%; transform: rotate(0deg);}
-  50% {width: 96%; transform: rotate(-1deg);}
-  75% {width: 100%; transform: rotate(0deg);}
-  100% {width: 96%; transform: rotate(1deg);}
-}
-@keyframes choo-choo-mf {
-  0%   {width: 98%;}
-  50%  {width: 100%;}
-  100% {width: 98%;}
-}
-@keyframes choo-choo-mf-move {
-    from {
-        bottom: 100%;
-        top: 0%;
-    }
-    to {
-        transform: translateY(-100%);
-        bottom: 0%;
-        top: 100%;
-    }
-}
 
+.cat-label{
+    width: 100%;
+    text-align: center;
+    margin: 20px;
+    font-size: xx-large;
+    font-family: monospace;
+    z-index: 2;
+    color: white;
+}
 .container {
     height: 100%;
     display: flex;
@@ -44,30 +79,28 @@
     justify-content: flex-end;
 }
 
-.train-wrapper {
+.train-track {
     position: relative;
     display: flex;
     flex-grow: 1;
-    background-color: rgb(175, 79, 79);
 }
 
 .cat-wrapper {
     height: 180px;
     display: flex;
-    align-self: flex-end;
+    justify-content: center;
     align-items: center;
-    background-color: rgb(176, 176, 255);
 }
 
-.train { 
-    animation: choo-choo-mf-move 10s linear infinite, choo-choo-mf 1s linear infinite;
-    animation-delay: 200ms;
+.train-wrapper { 
     position: absolute;
     top: 0%;
 }
 
-.cat { animation: crying-cat 2s linear infinite;}
-
-img { width: 80%; height: auto;}
+img { 
+    width: 90%; 
+    height: auto;
+    overflow: hidden;
+}
 </style>
     
