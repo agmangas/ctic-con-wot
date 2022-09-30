@@ -1,34 +1,19 @@
 <script>
   import Slides from './lib/Slides.svelte';
   import CatInDanger from './lib/CatInDanger.svelte';
-  import anime from 'animejs/lib/anime.es.js';
-  import { onMount } from 'svelte';
-
-  const MQTT_URL = import.meta.env.VITE_SLIDES_APP_MQTT_URL || "ws://localhost:9001";
-
-  onMount(()=>{
-    var tl = anime.timeline({
-        targets: ".side-item",
-        duration: 2000,
-        width: ["0%","12%"],
-        easing: 'easeOutExpo',
-        delay: 2000,
-    });
-    tl.add({
-        targets: ".side-item",
-        opacity: [0, 1],
-        easing: 'linear',
-    })
-  })
-
+  import { fly } from 'svelte/transition';
+  
+  let visible = false;
 </script>
 
 <div class="container">
-  <div class="side-item">
-    <CatInDanger />
-  </div>
+  {#if visible}
+    <div class="side-item" transition:fly="{{ x: -200, duration: 1000 }}">
+      <CatInDanger />
+    </div>
+  {/if}
   <div class="center-item">
-    <Slides mqttURL={MQTT_URL}/>
+    <Slides on:jeopardize-cat="{e => visible = e.detail.value}"/>
   </div>
 </div>
 

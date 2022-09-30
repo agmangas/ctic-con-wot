@@ -1,23 +1,26 @@
 <script>
     import catSprite from '/src/assets/cat.png';
     import trainSprite from '/src/assets/moving_train.png';
-    import terminatedCat from '/src/assets/terminated_cat.png'
+    import terminatedCat from '/src/assets/terminated_cat.png';
+    
     import anime from 'animejs/lib/anime.es.js';
+
+    import { fade } from 'svelte/transition';
     import { onMount } from 'svelte';
 
     const TIME_TO_DEATH = 5e3;
 
-
-    let catIsDone = false;
     // Binded to elements in the DOM
     let trainWrapperEl;
     let trainEl;
     let catLabelEl;
 
+    // Variables
+    let catIsDone = false;
     let countdown = "100%";
-    let progress = 0;
 
     onMount(()=>{
+        // Train movement
         let trainAnimation = anime({
             targets: trainWrapperEl,
             top: "100%",
@@ -33,8 +36,10 @@
         });
         trainAnimation.finished.then(() => {catIsDone=true;} );
 
+
+        // Animate sprites
         anime({
-            targets: trainEl,
+            targets: ".train",
             scaleX: ["1.05","0.9"],
             loop: true,
             direction: 'alternate',
@@ -52,8 +57,7 @@
     })
 
     
-</script>
-
+</script> 
 {#if !catIsDone}
     <div class="container">
         <div class="train-track">
@@ -67,7 +71,7 @@
         </div>
     </div>
 {:else}
-    <div class="terminated-cat-container">
+    <div transition:fade class="terminated-cat-container">
         <img src={terminatedCat} alt="cat terminated"/>
     </div>
 {/if}
@@ -121,6 +125,7 @@ img {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    background-color: rgb(207, 74, 51);
 }
 </style>
     
