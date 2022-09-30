@@ -2,6 +2,7 @@
     import catSprite from '/src/assets/cat.png';
     import trainSprite from '/src/assets/moving_train.png';
     import terminatedCat from '/src/assets/terminated_cat.png';
+    import savedCatSprite from '/src/assets/saved_cat.png'
     
     import anime from 'animejs/lib/anime.es.js';
 
@@ -15,9 +16,32 @@
     let trainEl;
     let catLabelEl;
 
+    // Possible states of the animation
+    const catStates = {
+        idle: "idle",
+        danger: "danger",
+        terminated: "terminated",
+        saved: "saved"
+    }
+
+    let catState = catStates.idle;
     // Variables
-    let catIsDone = false;
     let countdown = "100%";
+
+    // Props
+    export let presentationState = "idle";
+
+    $: if (presentationState === "done") {
+        if(catState === catStates.terminated){ }
+        else { catState = catStates.saved; }
+    }
+    else if (presentationState === "running"){
+        if(catState === catStates.terminated){ }
+        else{ catState = catStates.danger;}
+    }
+    else {
+        catState = catStates.idle;
+    }
 
     onMount(()=>{
         // Train movement
@@ -34,7 +58,9 @@
                 countdown = `${minutes}:${("0" + seconds).slice(-2)}`;
             }
         });
-        trainAnimation.finished.then(() => {catIsDone=true;} );
+        trainAnimation.finished.then(() => {
+            catState=catStates.terminated;
+        });
 
 
         // Animate sprites
@@ -57,8 +83,9 @@
     })
 
     
-</script> 
-{#if !catIsDone}
+</script>
+
+{#if catState === catStates.danger}
     <div class="container">
         <div class="train-track">
             <p bind:this={catLabelEl} class="cat-label">{countdown}</p>
@@ -70,9 +97,14 @@
             <img class="cat" src={catSprite} alt="train drawing"/>
         </div>
     </div>
-{:else}
-    <div transition:fade class="terminated-cat-container">
+{:else if catState === catStates.terminated}
+    <div transition:fade class="terminated cat-container">
         <img src={terminatedCat} alt="cat terminated"/>
+    </div>
+
+{:else }
+    <div transition:fade class="saved cat-container">
+        <img src={savedCatSprite} alt="cat terminated"/>
     </div>
 {/if}
 
@@ -119,13 +151,19 @@ img {
     overflow: hidden;
 }
 
-.terminated-cat-container {
+.cat-container {
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     background-color: rgb(207, 74, 51);
+}
+.terminated{
+    background-color: rgb(207, 74, 51);
+}
+.saved{
+    background-color: rgb(36, 214, 116);
 }
 </style>
     

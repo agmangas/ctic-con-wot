@@ -6,23 +6,15 @@
 
   // Event dispatcher
 	const dispatch = createEventDispatcher();
-  
+
 	const slideHandler = (() => {
     let previousIndexh = 0;
     return (event)=> {
-      if (event.indexh === 0){
-        dispatch('jeopardize-cat', {
-          value: false
+      dispatch('slide-changed', {
+          previousIndexh: previousIndexh,
+          indexh: event.indexh,
+          totalSlides: deck.getTotalSlides()
         });
-        setTimeout(redrawSlides, 150);
-      }
-      if (previousIndexh === 0 && event.indexh === 1){
-        previousIndexh
-        dispatch('jeopardize-cat', {
-          value: true
-        });
-        setTimeout(redrawSlides, 150);
-      }
       previousIndexh = event.indexh;
     }
 	})();
@@ -59,7 +51,7 @@
   }
 
   onMount(() => {
-    let deck = Reveal(deckCanvas, {
+    deck = Reveal(deckCanvas, {
       minScale: 0.2,
     });
     deck.initialize();

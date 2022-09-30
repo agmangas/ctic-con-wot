@@ -3,17 +3,30 @@
   import CatInDanger from './lib/CatInDanger.svelte';
   import { fly } from 'svelte/transition';
   
-  let visible = false;
+  let presentationState = "idle";
+
+  function slideHandler(e)
+  {
+    if (e.detail.indexh === 0) {
+      presentationState = "idle"
+    }
+    else if (e.detail.indexh === 1 && e.detail.previousIndexh === 0){
+      presentationState = "running"
+    }
+    else if (e.detail.indexh === (e.detail.totalSlides - 1)){
+      presentationState = "done"
+    }
+  }
 </script>
 
 <div class="container">
-  {#if visible}
+  {#if presentationState !== "idle"}
     <div class="side-item" transition:fly="{{ x: -200, duration: 1000 }}">
-      <CatInDanger />
+      <CatInDanger presentationState={presentationState}/>
     </div>
   {/if}
   <div class="center-item">
-    <Slides on:jeopardize-cat="{e => visible = e.detail.value}"/>
+    <Slides on:slide-changed={slideHandler}/>
   </div>
 </div>
 
