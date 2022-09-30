@@ -5,6 +5,8 @@
   import { createEventDispatcher } from 'svelte';
   import MqttClient from "./MQTTClient.svelte";
 
+  const GRAFANA_URL = import.meta.env.VITE_SLIDES_APP_GRAFANA_URL || "http://localhost:3000";
+
   // Event dispatcher
 	const dispatch = createEventDispatcher();
 
@@ -95,7 +97,7 @@
       <iframe
         title="Dashboard"
         class="r-stretch"
-        src="http://localhost:3000/d-solo/0atAxsnVk/new-dashboard?orgId=1&refresh=5s&panelId=6"
+        src="{GRAFANA_URL}/d-solo/0atAxsnVk/new-dashboard?orgId=1&refresh=5s&panelId=6"
         width="250"
         frameborder="0"
       />
@@ -104,7 +106,7 @@
       WAPO WAPO 2
       <iframe
         title="Dashboard"
-        src="http://localhost:3000/d-solo/0atAxsnVk/new-dashboard?orgId=1&refresh=5s&panelId=6"
+        src="{GRAFANA_URL}/d-solo/0atAxsnVk/new-dashboard?orgId=1&refresh=5s&panelId=6"
         width="450"
         height="200"
         frameborder="0"

@@ -161,7 +161,6 @@ img {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: rgb(207, 74, 51);
 }
 .terminated{
     background-color: rgb(207, 74, 51);
