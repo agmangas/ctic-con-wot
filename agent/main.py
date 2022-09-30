@@ -2,6 +2,7 @@ import asyncio
 import logging
 import os
 import pprint
+import random
 import ssl
 from contextlib import AsyncExitStack
 
@@ -23,6 +24,7 @@ _MQTT_WS_TRANSPORT = "websockets"
 _START = "-10m"
 _WINDOW_PERIOD = "10s"
 _MOVING_AVG_N = 5
+_ITER_SLEEP_SECS = 1.5
 
 _logger = logging.getLogger(__name__)
 
@@ -37,6 +39,94 @@ async def _cancel_tasks(tasks):
             await task
         except asyncio.CancelledError:
             pass
+
+
+async def _query_orientation(influx_client):
+    query_api = influx_client.query_api()
+
+    return await query_api.query_data_frame(
+        (
+            'from(bucket: "{bucket}") '
+            "|> range(start: {start}) "
+            '|> filter(fn: (r) => r["_measurement"] == "orientation") '
+            '|> filter(fn: (r) => r["_field"] == "alpha" or r["_field"] == "beta" or r["_field"] == "gamma") '
+            '|> group(columns: ["_measurement"]) '
+            '|> difference(nonNegative: true, columns: ["_value"]) '
+            "|> aggregateWindow(every: {window_period}, fn: sum, createEmpty: true) "
+            "|> movingAverage(n: {moving_avg_n}) "
+            '|> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")'
+        ).format(
+            bucket=_ARG_INFLUX_BUCKET,
+            start=_START,
+            window_period=_WINDOW_PERIOD,
+            moving_avg_n=_MOVING_AVG_N,
+        )
+    )
+
+
+async def _check_orientation(influx_client):
+    while True:
+        df = await _query_orientation(influx_client=influx_client)
+        _logger.debug("Orientation DataFrame:\n%s", df)
+        await asyncio.sleep(_ITER_SLEEP_SECS)
+
+
+async def _query_clicks(influx_client):
+    query_api = influx_client.query_api()
+
+    return await query_api.query_data_frame(
+        (
+            'from(bucket: "{bucket}") '
+            "|> range(start: {start}) "
+            '|> filter(fn: (r) => r["_measurement"] == "click") '
+            '|> filter(fn: (r) => r["_field"] == "click") '
+            '|> group(columns: ["_field"]) '
+            "|> aggregateWindow(every: {window_period}, fn: sum, createEmpty: true) "
+            "|> movingAverage(n: {moving_avg_n}) "
+            '|> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")'
+        ).format(
+            bucket=_ARG_INFLUX_BUCKET,
+            start=_START,
+            window_period=_WINDOW_PERIOD,
+            moving_avg_n=_MOVING_AVG_N,
+        )
+    )
+
+
+async def _check_clicks(influx_client):
+    while True:
+        df = await _query_clicks(influx_client=influx_client)
+        _logger.debug("Clicks DataFrame:\n%s", df)
+        await asyncio.sleep(_ITER_SLEEP_SECS)
+
+
+async def _query_noise(influx_client):
+    query_api = influx_client.query_api()
+
+    return await query_api.query_data_frame(
+        (
+            'from(bucket: "{bucket}") '
+            "|> range(start: {start}) "
+            '|> filter(fn: (r) => r["_measurement"] == "noise") '
+            '|> filter(fn: (r) => r["_field"] == "noise") '
+            '|> group(columns: ["_field"]) '
+            "|> aggregateWindow(every: {window_period}, fn: sum, createEmpty: true) "
+            "|> movingAverage(n: {moving_avg_n}) "
+            '|> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")'
+        ).format(
+            bucket=_ARG_INFLUX_BUCKET,
+            start=_START,
+            window_period=_WINDOW_PERIOD,
+            moving_avg_n=_MOVING_AVG_N,
+        )
+    )
+
+
+async def _check_noise(influx_client):
+    while True:
+        df = await _query_noise(influx_client=influx_client)
+        _logger.debug("Noise DataFrame:\n%s", df)
+        await asyncio.sleep(_ITER_SLEEP_SECS)
 
 
 async def _main():
@@ -76,70 +166,9 @@ async def _main():
         influx_ready = await influx_client.ping()
         assert influx_ready
 
-        # ToDo: Move these queries to their functions
-
-        query_api = influx_client.query_api()
-
-        df = await query_api.query_data_frame(
-            (
-                'from(bucket: "{bucket}") '
-                "|> range(start: {start}) "
-                '|> filter(fn: (r) => r["_measurement"] == "orientation") '
-                '|> filter(fn: (r) => r["_field"] == "alpha" or r["_field"] == "beta" or r["_field"] == "gamma") '
-                '|> group(columns: ["_measurement"]) '
-                '|> difference(nonNegative: true, columns: ["_value"]) '
-                "|> aggregateWindow(every: {window_period}, fn: sum, createEmpty: true) "
-                "|> movingAverage(n: {moving_avg_n}) "
-                '|> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")'
-            ).format(
-                bucket=_ARG_INFLUX_BUCKET,
-                start=_START,
-                window_period=_WINDOW_PERIOD,
-                moving_avg_n=_MOVING_AVG_N,
-            )
-        )
-
-        print(df)
-
-        df = await query_api.query_data_frame(
-            (
-                'from(bucket: "{bucket}") '
-                "|> range(start: {start}) "
-                '|> filter(fn: (r) => r["_measurement"] == "click") '
-                '|> filter(fn: (r) => r["_field"] == "click") '
-                '|> group(columns: ["_field"]) '
-                "|> aggregateWindow(every: {window_period}, fn: sum, createEmpty: true) "
-                "|> movingAverage(n: {moving_avg_n}) "
-                '|> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")'
-            ).format(
-                bucket=_ARG_INFLUX_BUCKET,
-                start=_START,
-                window_period=_WINDOW_PERIOD,
-                moving_avg_n=_MOVING_AVG_N,
-            )
-        )
-
-        print(df)
-
-        df = await query_api.query_data_frame(
-            (
-                'from(bucket: "{bucket}") '
-                "|> range(start: {start}) "
-                '|> filter(fn: (r) => r["_measurement"] == "noise") '
-                '|> filter(fn: (r) => r["_field"] == "noise") '
-                '|> group(columns: ["_field"]) '
-                "|> aggregateWindow(every: {window_period}, fn: sum, createEmpty: true) "
-                "|> movingAverage(n: {moving_avg_n}) "
-                '|> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")'
-            ).format(
-                bucket=_ARG_INFLUX_BUCKET,
-                start=_START,
-                window_period=_WINDOW_PERIOD,
-                moving_avg_n=_MOVING_AVG_N,
-            )
-        )
-
-        print(df)
+        tasks.add(asyncio.create_task(_check_orientation(influx_client=influx_client)))
+        tasks.add(asyncio.create_task(_check_clicks(influx_client=influx_client)))
+        tasks.add(asyncio.create_task(_check_noise(influx_client=influx_client)))
 
         await asyncio.gather(*tasks)
 
