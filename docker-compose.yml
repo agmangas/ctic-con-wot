@@ -25,6 +25,10 @@ services:
       LOG_LEVEL: ${AGENT_LOG_LEVEL:-DEBUG}
       MQTT_HOST: mosquitto
       MQTT_PORT: 9001
+      INFLUX_URL: http://influx:8086
+      INFLUX_ORG: ${INFLUX_ORG}
+      INFLUX_TOKEN: ${INFLUX_TOKEN}
+      INFLUX_BUCKET: ${INFLUX_BUCKET}
     depends_on:
       - influx
       - mosquitto
