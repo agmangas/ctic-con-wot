@@ -2,11 +2,11 @@ import asyncio
 import logging
 import os
 import pprint
-import random
 import ssl
 from contextlib import AsyncExitStack
 
 import coloredlogs
+import pandas as pd
 from asyncio_mqtt import Client
 from influxdb_client.client.influxdb_client_async import InfluxDBClientAsync
 
@@ -25,6 +25,7 @@ _START = "-3m"
 _WINDOW_PERIOD = "10s"
 _MOVING_AVG_N = 5
 _ITER_SLEEP_SECS = 1.5
+_MAX_COLUMNS = 12
 
 _logger = logging.getLogger(__name__)
 
@@ -174,5 +175,6 @@ async def _main():
 
 
 if __name__ == "__main__":
+    pd.set_option("display.max_columns", _MAX_COLUMNS)
     coloredlogs.install(level=_ARG_LOG_LEVEL)
     asyncio.run(_main())
