@@ -1,0 +1,29 @@
+body {
+    font-family: monospace;
+    margin: 2em;
+    font-size: 150%;
+    background: antiquewhite;
+}
+
+h1 {
+    text-transform: uppercase;
+    color: brown;
+}
+
+button {
+    font-size: 20pt;
+    font-family: monospace;
+    background: palevioletred;
+    border-radius: 10px;
+    padding: 0.5em 3em;
+    margin: 1.5em 0.5em;
+}
+
+.winner {
+    color: green;
+    font-weight: bold;
+}
+
+#label-container {
+    color: red;
+}

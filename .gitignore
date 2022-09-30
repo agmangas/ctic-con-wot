@@ -269,3 +269,4 @@ dist
 #######
 
 .vscode
+.vagrant/

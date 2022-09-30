@@ -79,7 +79,10 @@ def _handle_exception(err):
 
 
 def _catch_all(path):
-    return current_app.send_static_file("index.html")
+    if path == "flauta":
+        return current_app.send_static_file("flauta/index.html")
+    else:
+        return current_app.send_static_file("index.html")
 
 
 def create_app(test_config=None):
