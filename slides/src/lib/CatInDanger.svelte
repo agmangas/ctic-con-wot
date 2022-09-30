@@ -1,6 +1,6 @@
 <script>
     import catSprite from '/src/assets/cat.png';
-    import trainSprite from '/src/assets/train.png';
+    import trainSprite from '/src/assets/moving_train.png';
     import anime from 'animejs/lib/anime.es.js';
     import { onMount } from 'svelte';
 
