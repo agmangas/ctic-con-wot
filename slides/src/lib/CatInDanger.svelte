@@ -15,7 +15,10 @@
     let trainWrapperEl;
     let trainEl;
     let catLabelEl;
-
+    
+    // Variables
+    let countdown = "100%";
+    
     // Possible states of the animation
     const catStates = {
         idle: "idle",
@@ -25,12 +28,11 @@
     }
 
     let catState = catStates.idle;
-    // Variables
-    let countdown = "100%";
 
     // Props
     export let presentationState = "idle";
 
+    // State management
     $: if (presentationState === "done") {
         if(catState === catStates.terminated){ }
         else { catState = catStates.saved; }
@@ -59,11 +61,13 @@
             }
         });
         trainAnimation.finished.then(() => {
-            catState=catStates.terminated;
+            if (presentationState !== "done") {
+                catState=catStates.terminated;
+            }
         });
 
 
-        // Animate sprites
+        // Animation of sprites
         anime({
             targets: ".train",
             scaleX: ["1.05","0.9"],

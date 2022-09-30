@@ -1,13 +1,29 @@
 <script>
   import Reveal from "reveal.js";
-  import * as mqtt from "mqtt"
+
   import { onMount } from "svelte";
   import { createEventDispatcher } from 'svelte';
+  import MqttClient from "./MQTTClient.svelte";
 
   // Event dispatcher
 	const dispatch = createEventDispatcher();
 
-	const slideHandler = (() => {
+  // Binded to DOM
+  let deckCanvas;
+
+  // Initalize deck canvas
+  let deck;
+
+  onMount(() => {
+    deck = Reveal(deckCanvas, {
+      minScale: 0.2,
+    });
+    deck.initialize();
+    deck.on('slidechanged', slideChangeHandler);
+    
+  });
+
+  const slideChangeHandler = (() => {
     let previousIndexh = 0;
     return (event)=> {
       dispatch('slide-changed', {
@@ -19,45 +35,9 @@
     }
 	})();
 
-  // MQTT Initialization and configuration
-  const TOPIC_SLIDES_COMMAND = "slides/command";
-
-  const MQTT_URL = import.meta.env.VITE_SLIDES_APP_MQTT_URL || "ws://localhost:9001";
-  const client = mqtt.connect(MQTT_URL);
-  console.log(`Connecting to: ${MQTT_URL}`);
-
-  client.on("connect", () => {
-    console.log("MQTT", client);
-    client.subscribe(TOPIC_SLIDES_COMMAND, (err)=>{
-      if (!err) {
-        console.log("Subscribed");
-      }
-    });
-  })
-
-  client.on('message', function (topic, message) {
-    if (topic == TOPIC_SLIDES_COMMAND){
-      console.log(message.toString());
-      window.postMessage(message.toString());
-    }
-  })
-
-  // Initalize deck canvas
-  let deck;
-  let deckCanvas;
-  const redrawSlides = ()=>{
-    console.log("redrawing")
-    deck.layout();
-  }
-
-  onMount(() => {
-    deck = Reveal(deckCanvas, {
-      minScale: 0.2,
-    });
-    deck.initialize();
-    deck.on('slidechanged', slideHandler);
-  });
 </script>
+
+<MqttClient on:command="{e => window.postMessage(e.detail.command)}"/>
 
 <div class="reveal" bind:this={deckCanvas}>
   <div class="slides">
