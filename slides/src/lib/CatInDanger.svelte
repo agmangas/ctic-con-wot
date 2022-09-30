@@ -89,7 +89,7 @@
     height: 180px;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
 }
 
 .train-wrapper { 
@@ -98,7 +98,7 @@
 }
 
 img { 
-    width: 90%; 
+    width: 80%; 
     height: auto;
     overflow: hidden;
 }
