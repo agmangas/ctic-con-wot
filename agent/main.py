@@ -21,7 +21,7 @@ _ARG_INFLUX_ORG = os.getenv("INFLUX_ORG", "wot")
 _ARG_INFLUX_BUCKET = os.getenv("INFLUX_BUCKET", "default-bucket")
 
 _MQTT_WS_TRANSPORT = "websockets"
-_START = "-10m"
+_START = "-3m"
 _WINDOW_PERIOD = "10s"
 _MOVING_AVG_N = 5
 _ITER_SLEEP_SECS = 1.5
