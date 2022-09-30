@@ -48,14 +48,20 @@ class MqttClient():
             else:
                 logging.warning("Failed to connect, return code %d\n", rc)
 
-        #self._client.username_pw_set(username, password)
-        self._client.on_connect = on_connect
-        if(self.transport=="websockets"):
-            self._client.tls_set()
-        self._client.connect(self.broker, self.port)
+        try:
+            #self._client.username_pw_set(username, password)
+            self._client.on_connect = on_connect
+            if(self.transport=="websockets"):
+                self._client.tls_set()
+            self._client.connect(self.broker, self.port)
 
-        #Subscribe
-        self._subscribe(topic_to_subscribe)
+            #Subscribe
+            self._subscribe(topic_to_subscribe)
+            return True
+            
+        except Exception as e:
+            logging.error(f"ERROR: In MQTT connection process: {e}")
+            return False
         
     def set_callback(self, on_message_function):
         """Set callback for the client"""

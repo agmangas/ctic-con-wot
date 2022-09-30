@@ -41,8 +41,13 @@ def system():
                 messages.append(element["elements"][1]["text"].lower())
 
         if any(EXPECTED_WORD in message for message in messages):
-            mqttClient.publish(TOPIC ,EXPECTED_WORD)
-            return Response("{'success':'True'}", status=200, mimetype='application/json')
+            logging.info("-->Message contains the Word, send it to MQTT . . .")
+            try:
+                mqttClient.publish(TOPIC ,EXPECTED_WORD)
+                return Response("{'success':'True'}", status=200, mimetype='application/json')
+            except Exception as e:
+                return Response(f"{'success':'False', 'message': 'Error in MQTTClient: {e}'}", status=500, mimetype='application/json')
+
 
         return Response("{'success':'False', 'message': 'Unexpected word'}", status=400, mimetype='application/json')
 
