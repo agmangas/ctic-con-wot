@@ -92,6 +92,8 @@ services:
       INFLUX_BUCKET: ${INFLUX_BUCKET}
       INFLUX_ORG: ${INFLUX_ORG}
       INFLUX_TOKEN: ${INFLUX_TOKEN}
+      GF_PANELS_DISABLE_SANITIZE_HTML: "true"
+      GF_SECURITY_ALLOW_EMBEDDING: "true"
     depends_on:
       - influx
       - mosquitto

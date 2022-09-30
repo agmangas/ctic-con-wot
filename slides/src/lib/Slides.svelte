@@ -97,7 +97,7 @@
       <iframe
         title="Dashboard"
         class="r-stretch"
-        src="{GRAFANA_URL}/d-solo/0atAxsnVk/new-dashboard?orgId=1&refresh=5s&panelId=6"
+        src="{GRAFANA_URL}/d-solo/NJXJHOV4z/new-dashboard?orgId=1&from=1664551568080&to=1664552468080&panelId=2"
         width="250"
         frameborder="0"
       />
@@ -106,7 +106,7 @@
       WAPO WAPO 2
       <iframe
         title="Dashboard"
-        src="{GRAFANA_URL}/d-solo/0atAxsnVk/new-dashboard?orgId=1&refresh=5s&panelId=6"
+        src="{GRAFANA_URL}/d-solo/NJXJHOV4z/new-dashboard?orgId=1&from=1664551568080&to=1664552468080&panelId=2"
         width="450"
         height="200"
         frameborder="0"
