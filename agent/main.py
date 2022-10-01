@@ -1,14 +1,19 @@
 import asyncio
+import json
 import logging
 import os
 import pprint
 import ssl
+import warnings
 from contextlib import AsyncExitStack
 
 import coloredlogs
 import pandas as pd
 from asyncio_mqtt import Client
 from influxdb_client.client.influxdb_client_async import InfluxDBClientAsync
+from influxdb_client.client.warnings import MissingPivotFunction
+
+warnings.simplefilter("ignore", MissingPivotFunction)
 
 _ARG_LOG_LEVEL = os.getenv("LOG_LEVEL", "DEBUG")
 _ARG_MQTT_HOST = os.getenv("MQTT_HOST", "localhost")
@@ -24,8 +29,8 @@ _MQTT_WS_TRANSPORT = "websockets"
 _START = "-3m"
 _WINDOW_PERIOD = "10s"
 _MOVING_AVG_N = 5
-_ITER_SLEEP_SECS = 1.5
-_MAX_COLUMNS = 12
+_ITER_SLEEP_SECS = 2.0
+_TOPIC_CURRENT_STATS = "sensors-app/aggregated-stats"
 
 _logger = logging.getLogger(__name__)
 
@@ -42,10 +47,24 @@ async def _cancel_tasks(tasks):
             pass
 
 
-async def _query_orientation(influx_client):
+async def _query_distinct_clients(influx_client, start="-1m"):
     query_api = influx_client.query_api()
 
     return await query_api.query_data_frame(
+        (
+            'from(bucket: "{bucket}") '
+            "|> range(start: {start}) "
+            '|> filter(fn: (r) => r["_measurement"] == "noise" or r["_measurement"] == "click") '
+            '|> group(columns: ["device"]) '
+            '|> distinct(column: "device")'
+        ).format(bucket=_ARG_INFLUX_BUCKET, start=start)
+    )
+
+
+async def _query_orientation(influx_client):
+    query_api = influx_client.query_api()
+
+    df = await query_api.query_data_frame(
         (
             'from(bucket: "{bucket}") '
             "|> range(start: {start}) "
@@ -55,7 +74,6 @@ async def _query_orientation(influx_client):
             '|> difference(nonNegative: true, columns: ["_value"]) '
             "|> aggregateWindow(every: {window_period}, fn: sum, createEmpty: true) "
             "|> movingAverage(n: {moving_avg_n}) "
-            '|> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")'
         ).format(
             bucket=_ARG_INFLUX_BUCKET,
             start=_START,
@@ -64,18 +82,13 @@ async def _query_orientation(influx_client):
         )
     )
 
-
-async def _check_orientation(influx_client):
-    while True:
-        df = await _query_orientation(influx_client=influx_client)
-        _logger.debug("Orientation DataFrame:\n%s", df)
-        await asyncio.sleep(_ITER_SLEEP_SECS)
+    return df.fillna(0)
 
 
 async def _query_clicks(influx_client):
     query_api = influx_client.query_api()
 
-    return await query_api.query_data_frame(
+    df = await query_api.query_data_frame(
         (
             'from(bucket: "{bucket}") '
             "|> range(start: {start}) "
@@ -93,18 +106,13 @@ async def _query_clicks(influx_client):
         )
     )
 
-
-async def _check_clicks(influx_client):
-    while True:
-        df = await _query_clicks(influx_client=influx_client)
-        _logger.debug("Clicks DataFrame:\n%s", df)
-        await asyncio.sleep(_ITER_SLEEP_SECS)
+    return df.fillna(0)
 
 
 async def _query_noise(influx_client):
     query_api = influx_client.query_api()
 
-    return await query_api.query_data_frame(
+    df = await query_api.query_data_frame(
         (
             'from(bucket: "{bucket}") '
             "|> range(start: {start}) "
@@ -122,11 +130,40 @@ async def _query_noise(influx_client):
         )
     )
 
+    return df.fillna(0)
 
-async def _check_noise(influx_client):
+
+async def _check_sensors(influx_client, mqtt_client):
     while True:
-        df = await _query_noise(influx_client=influx_client)
-        _logger.debug("Noise DataFrame:\n%s", df)
+        df_orientation = await _query_orientation(influx_client=influx_client)
+        _logger.debug("Orientation DataFrame:\n%s", df_orientation)
+
+        df_clicks = await _query_clicks(influx_client=influx_client)
+        _logger.debug("Clicks DataFrame:\n%s", df_clicks)
+
+        df_noise = await _query_noise(influx_client=influx_client)
+        _logger.debug("Noise DataFrame:\n%s", df_noise)
+
+        df_clients = await _query_distinct_clients(influx_client=influx_client)
+        _logger.debug("Clients DataFrame:\n%s", df_clients)
+
+        curr_stats = {
+            "noise": df_noise.describe()["noise"].to_dict()
+            if not df_noise.empty
+            else None,
+            "click": df_clicks.describe()["click"].to_dict()
+            if not df_clicks.empty
+            else None,
+            "orientation": df_orientation.describe()["_value"].to_dict()
+            if not df_orientation.empty
+            else None,
+            "num_clients": df_clients.shape[0],
+        }
+
+        _logger.info("Current stats:\n%s", pprint.pformat(curr_stats))
+
+        await mqtt_client.publish(_TOPIC_CURRENT_STATS, json.dumps(curr_stats), qos=0)
+
         await asyncio.sleep(_ITER_SLEEP_SECS)
 
 
@@ -167,14 +204,15 @@ async def _main():
         influx_ready = await influx_client.ping()
         assert influx_ready
 
-        tasks.add(asyncio.create_task(_check_orientation(influx_client=influx_client)))
-        tasks.add(asyncio.create_task(_check_clicks(influx_client=influx_client)))
-        tasks.add(asyncio.create_task(_check_noise(influx_client=influx_client)))
+        tasks.add(
+            asyncio.create_task(
+                _check_sensors(influx_client=influx_client, mqtt_client=mqtt_client)
+            )
+        )
 
         await asyncio.gather(*tasks)
 
 
 if __name__ == "__main__":
-    pd.set_option("display.max_columns", _MAX_COLUMNS)
     coloredlogs.install(level=_ARG_LOG_LEVEL)
     asyncio.run(_main())
