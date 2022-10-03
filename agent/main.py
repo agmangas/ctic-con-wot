@@ -8,7 +8,6 @@ import warnings
 from contextlib import AsyncExitStack
 
 import coloredlogs
-import pandas as pd
 from asyncio_mqtt import Client
 from influxdb_client.client.influxdb_client_async import InfluxDBClientAsync
 from influxdb_client.client.warnings import MissingPivotFunction
@@ -24,13 +23,23 @@ _ARG_INFLUX_URL = os.getenv("INFLUX_URL", "http://influx:8086")
 _ARG_INFLUX_TOKEN = os.getenv("INFLUX_TOKEN", "influx")
 _ARG_INFLUX_ORG = os.getenv("INFLUX_ORG", "wot")
 _ARG_INFLUX_BUCKET = os.getenv("INFLUX_BUCKET", "default-bucket")
+_ARG_TARGET_AVG_ORIENTATION_DIFF = float(os.getenv("TARGET_AVG_ORIENTATION_DIFF", 4000))
+_ARG_TARGET_AVG_CLICKS = float(os.getenv("TARGET_AVG_CLICKS", 35))
+_ARG_TARGET_AVG_NOISE = float(os.getenv("TARGET_AVG_NOISE", 1.0))
+_ARG_TARGET_NUM_CLIENTS = float(os.getenv("TARGET_NUM_CLIENTS", 8))
 
 _MQTT_WS_TRANSPORT = "websockets"
-_START = "-3m"
+_START = "-2m"
 _WINDOW_PERIOD = "10s"
-_MOVING_AVG_N = 5
 _ITER_SLEEP_SECS = 2.0
 _TOPIC_CURRENT_STATS = "sensors-app/aggregated-stats"
+_TOPIC_ALERT = "sensors-app/alert"
+_KEY_ORIENTATION = "orientation"
+_KEY_CLICKS = "clicks"
+_KEY_NOISE = "noise"
+_KEY_ALERT_ACTIVE = "active"
+_KEY_ALERT_CURRENT = "current"
+_KEY_ALERT_TARGET = "target"
 
 _logger = logging.getLogger(__name__)
 
@@ -73,12 +82,10 @@ async def _query_orientation(influx_client):
             '|> group(columns: ["_measurement"]) '
             '|> difference(nonNegative: true, columns: ["_value"]) '
             "|> aggregateWindow(every: {window_period}, fn: sum, createEmpty: true) "
-            "|> movingAverage(n: {moving_avg_n}) "
         ).format(
             bucket=_ARG_INFLUX_BUCKET,
             start=_START,
             window_period=_WINDOW_PERIOD,
-            moving_avg_n=_MOVING_AVG_N,
         )
     )
 
@@ -96,13 +103,10 @@ async def _query_clicks(influx_client):
             '|> filter(fn: (r) => r["_field"] == "click") '
             '|> group(columns: ["_field"]) '
             "|> aggregateWindow(every: {window_period}, fn: sum, createEmpty: true) "
-            "|> movingAverage(n: {moving_avg_n}) "
-            '|> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")'
         ).format(
             bucket=_ARG_INFLUX_BUCKET,
             start=_START,
             window_period=_WINDOW_PERIOD,
-            moving_avg_n=_MOVING_AVG_N,
         )
     )
 
@@ -118,22 +122,43 @@ async def _query_noise(influx_client):
             "|> range(start: {start}) "
             '|> filter(fn: (r) => r["_measurement"] == "noise") '
             '|> filter(fn: (r) => r["_field"] == "noise") '
+            '|> group(columns: ["device"]) '
+            "|> aggregateWindow(every: {window_period}, fn: mean, createEmpty: true) "
             '|> group(columns: ["_field"]) '
             "|> aggregateWindow(every: {window_period}, fn: sum, createEmpty: true) "
-            "|> movingAverage(n: {moving_avg_n}) "
-            '|> pivot(rowKey:["_time"], columnKey: ["_field"], valueColumn: "_value")'
         ).format(
             bucket=_ARG_INFLUX_BUCKET,
             start=_START,
             window_period=_WINDOW_PERIOD,
-            moving_avg_n=_MOVING_AVG_N,
         )
     )
 
     return df.fillna(0)
 
 
-async def _check_sensors(influx_client, mqtt_client):
+def _get_df_stats(df, round_len=3, key_time="_time", key_value="_value"):
+    if df.empty:
+        return None
+
+    df_sorted = df.sort_values(by=[key_time])
+    ser_values = df_sorted[key_value]
+
+    stats = {
+        key: round(val, round_len)
+        for key, val in ser_values.describe().to_dict().items()
+    }
+
+    stats.update(
+        {
+            "sum": round(ser_values.sum(), round_len),
+            "values": ser_values.round(round_len).astype("float").to_list(),
+        }
+    )
+
+    return stats
+
+
+async def _check_sensors(influx_client, mqtt_client, stats_qos=0, alert_qos=2):
     while True:
         df_orientation = await _query_orientation(influx_client=influx_client)
         _logger.debug("Orientation DataFrame:\n%s", df_orientation)
@@ -147,22 +172,56 @@ async def _check_sensors(influx_client, mqtt_client):
         df_clients = await _query_distinct_clients(influx_client=influx_client)
         _logger.debug("Clients DataFrame:\n%s", df_clients)
 
+        stats_noise = _get_df_stats(df_noise)
+        stats_click = _get_df_stats(df_clicks)
+        stats_orientation = _get_df_stats(df_orientation)
+
         curr_stats = {
-            "noise": df_noise.describe()["noise"].to_dict()
-            if not df_noise.empty
-            else None,
-            "click": df_clicks.describe()["click"].to_dict()
-            if not df_clicks.empty
-            else None,
-            "orientation": df_orientation.describe()["_value"].to_dict()
-            if not df_orientation.empty
-            else None,
+            _KEY_NOISE: stats_noise,
+            _KEY_CLICKS: stats_click,
+            _KEY_ORIENTATION: stats_orientation,
             "num_clients": df_clients.shape[0],
         }
 
         _logger.info("Current stats:\n%s", pprint.pformat(curr_stats))
 
-        await mqtt_client.publish(_TOPIC_CURRENT_STATS, json.dumps(curr_stats), qos=0)
+        await mqtt_client.publish(
+            _TOPIC_CURRENT_STATS, json.dumps(curr_stats), qos=stats_qos
+        )
+
+        target_orientation = _ARG_TARGET_AVG_ORIENTATION_DIFF * _ARG_TARGET_NUM_CLIENTS
+        target_noise = _ARG_TARGET_AVG_NOISE * _ARG_TARGET_NUM_CLIENTS
+        target_clicks = _ARG_TARGET_AVG_CLICKS * _ARG_TARGET_NUM_CLIENTS
+
+        alert_body = {
+            _KEY_ORIENTATION: {
+                _KEY_ALERT_ACTIVE: stats_orientation["max"] >= target_orientation
+                if stats_orientation
+                else False,
+                _KEY_ALERT_CURRENT: stats_orientation["max"]
+                if stats_orientation
+                else None,
+                _KEY_ALERT_TARGET: target_orientation,
+            },
+            _KEY_NOISE: {
+                _KEY_ALERT_ACTIVE: stats_noise["max"] >= target_noise
+                if stats_noise
+                else False,
+                _KEY_ALERT_CURRENT: stats_noise["max"] if stats_noise else None,
+                _KEY_ALERT_TARGET: target_noise,
+            },
+            _KEY_CLICKS: {
+                _KEY_ALERT_ACTIVE: stats_click["max"] >= target_clicks
+                if stats_click
+                else False,
+                _KEY_ALERT_CURRENT: stats_click["max"] if stats_click else None,
+                _KEY_ALERT_TARGET: target_clicks,
+            },
+        }
+
+        _logger.info("Alert:\n%s", alert_body)
+
+        await mqtt_client.publish(_TOPIC_ALERT, json.dumps(alert_body), qos=alert_qos)
 
         await asyncio.sleep(_ITER_SLEEP_SECS)
 
