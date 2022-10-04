@@ -270,3 +270,4 @@ dist
 
 .vscode
 .vagrant/
+**/.idea/
