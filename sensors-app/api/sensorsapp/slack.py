@@ -15,6 +15,7 @@ mqttClient = MqttClient.create_from_environment()
 mqttClient.connect()
 # Settings
 TOPIC = os.environ.get("MQTT_TOPICS", "test") # Hardcoded :)
+SLIDE = os.environ.get("SLACK_BOT_SLIDE", 3) # Hardcoded :)
 EXPECTED_WORD="siguiente"
 
 @blueprint.route("", methods=['POST'])
@@ -43,7 +44,11 @@ def system():
         if any(EXPECTED_WORD in message for message in messages):
             logging.info("-->Message contains the Word, send it to MQTT . . .")
             try:
-                mqttClient.publish(TOPIC ,EXPECTED_WORD)
+                msg_to_send =  {
+                    "method": "slide",
+                    "args": [ SLIDE ]
+                }
+                mqttClient.publish(TOPIC ,msg_to_send)
                 return Response("{'success':'True'}", status=200, mimetype='application/json')
             except Exception as e:
                 return Response(f"{'success':'False', 'message': 'Error in MQTTClient: {e}'}", status=500, mimetype='application/json')
