@@ -164,7 +164,7 @@ def _get_df_stats(df, round_len=3, key_time="_time", key_value="_value"):
 
 
 def _get_alert_body(df, target, round_len=3, key_value="_value"):
-    curr_max = df[key_value].max() if not df.empty else None
+    curr_max = df[key_value].astype("float").max() if not df.empty else None
 
     return {
         _KEY_ALERT_ACTIVE: curr_max >= target if curr_max is not None else False,
