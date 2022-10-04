@@ -92,12 +92,12 @@
       </div>
     </section>
 
-    <section>
+    <section> <!-- Grafana key: eyJrIjoiMzlUUGIxenl3UHVGR1djNlpPSWt6QUdmdzAzOGZtdEoiLCJuIjoiV290LUNPTiIsImlkIjoxfQ==-->
       WAPO WAPO
       <iframe
         title="Dashboard"
         class="r-stretch"
-        src="{GRAFANA_URL}/d-solo/NJXJHOV4z/new-dashboard?orgId=1&from=1664551568080&to=1664552468080&panelId=2"
+        src="{GRAFANA_URL}/d-solo/NJXJHOV4z/main?orgId=1&refresh=5s&from=1664873078984&to=1664873978984&panelId=2"
         width="250"
         frameborder="0"
       />

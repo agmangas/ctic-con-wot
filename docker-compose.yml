@@ -94,6 +94,7 @@ services:
       INFLUX_TOKEN: ${INFLUX_TOKEN}
       GF_PANELS_DISABLE_SANITIZE_HTML: "true"
       GF_SECURITY_ALLOW_EMBEDDING: "true"
+      GF_AUTH_ANONYMOUS_ENABLED: ${GF_AUTH_ANONYMOUS_ENABLED}
     depends_on:
       - influx
       - mosquitto
