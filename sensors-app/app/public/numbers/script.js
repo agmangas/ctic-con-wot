@@ -2,7 +2,7 @@
 // https://github.com/tensorflow/tfjs-models/tree/master/speech-commands
 
 // the link to your model provided by Teachable Machine export panel
-// const URL = "https://teachablemachine.withgoogle.com/models/pJYJtoiz_/";
+// const URL = "https://teachablemachine.withgoogle.com/models/2_NUkWnkK/";
 const URL = `${window.location.origin}/numbers/model/`;
 
 async function createModel() {
