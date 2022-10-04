@@ -14,15 +14,15 @@ blueprint = Blueprint(BLUEPRINT_NAME, __name__)
 mqttClient = MqttClient.create_from_environment()
 mqttClient.connect()
 # Settings
-TOPIC = os.environ.get("MQTT_TOPICS", "test") # Hardcoded :)
-SLIDE = os.environ.get("SLACK_BOT_SLIDE", 3) # Hardcoded :)
-EXPECTED_WORD="siguiente"
+TOPIC = os.environ.get("MQTT_TOPICS", "test") 
+SLIDE = os.environ.get("SLACK_BOT_SLIDE", 3) 
+EXPECTED_WORD="siguiente" # Hardcoded :)
 
 @blueprint.route("", methods=['POST'])
 def system():
     logging.info("Receive Slack POST")
     request_data = request.get_json()
-    print(request_data)
+    
     if "type" in request_data and request_data["type"]=="url_verification":
         logging.info("-->Challenge request, replying to confirm . . .")
 
@@ -42,12 +42,13 @@ def system():
                 messages.append(element["elements"][1]["text"].lower())
 
         if any(EXPECTED_WORD in message for message in messages):
-            logging.info("-->Message contains the Word, send it to MQTT . . .")
+            logging.info("-->Message contains the Word, send to MQTT . . .")
             try:
                 msg_to_send =  {
                     "method": "slide",
                     "args": [ SLIDE ]
                 }
+                logging.info(msg_to_send)
                 mqttClient.publish(TOPIC ,msg_to_send)
                 return Response("{'success':'True'}", status=200, mimetype='application/json')
             except Exception as e:
