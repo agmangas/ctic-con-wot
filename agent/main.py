@@ -28,12 +28,17 @@ _ARG_TARGET_AVG_CLICKS = float(os.getenv("TARGET_AVG_CLICKS", 35))
 _ARG_TARGET_AVG_NOISE = float(os.getenv("TARGET_AVG_NOISE", 1.0))
 _ARG_TARGET_NUM_CLIENTS = float(os.getenv("TARGET_NUM_CLIENTS", 8))
 
+_ARG_NEXT_SLIDE_INDEX = (
+    int(os.getenv("NEXT_SLIDE_INDEX")) if os.getenv("NEXT_SLIDE_INDEX") else None
+)
+
 _MQTT_WS_TRANSPORT = "websockets"
 _START = "-2m"
 _WINDOW_PERIOD = "10s"
 _ITER_SLEEP_SECS = 2.0
 _TOPIC_CURRENT_STATS = "sensors-app/aggregated-stats"
 _TOPIC_ALERT = "sensors-app/alert"
+_TOPIC_SLIDES_COMMAND = "slides/command"
 _KEY_ORIENTATION = "orientation"
 _KEY_CLICKS = "clicks"
 _KEY_NOISE = "noise"
@@ -158,6 +163,18 @@ def _get_df_stats(df, round_len=3, key_time="_time", key_value="_value"):
     return stats
 
 
+def _get_alert_body(df, target, round_len=3, key_value="_value"):
+    curr_max = df[key_value].max() if not df.empty else None
+
+    return {
+        _KEY_ALERT_ACTIVE: curr_max >= target if curr_max is not None else False,
+        _KEY_ALERT_CURRENT: round(curr_max, round_len)
+        if curr_max is not None
+        else None,
+        _KEY_ALERT_TARGET: round(target, round_len),
+    }
+
+
 async def _check_sensors(influx_client, mqtt_client, stats_qos=0, alert_qos=2):
     while True:
         df_orientation = await _query_orientation(influx_client=influx_client)
@@ -189,39 +206,36 @@ async def _check_sensors(influx_client, mqtt_client, stats_qos=0, alert_qos=2):
             _TOPIC_CURRENT_STATS, json.dumps(curr_stats), qos=stats_qos
         )
 
-        target_orientation = _ARG_TARGET_AVG_ORIENTATION_DIFF * _ARG_TARGET_NUM_CLIENTS
+        target_orient = _ARG_TARGET_AVG_ORIENTATION_DIFF * _ARG_TARGET_NUM_CLIENTS
         target_noise = _ARG_TARGET_AVG_NOISE * _ARG_TARGET_NUM_CLIENTS
         target_clicks = _ARG_TARGET_AVG_CLICKS * _ARG_TARGET_NUM_CLIENTS
 
         alert_body = {
-            _KEY_ORIENTATION: {
-                _KEY_ALERT_ACTIVE: stats_orientation["max"] >= target_orientation
-                if stats_orientation
-                else False,
-                _KEY_ALERT_CURRENT: stats_orientation["max"]
-                if stats_orientation
-                else None,
-                _KEY_ALERT_TARGET: target_orientation,
-            },
-            _KEY_NOISE: {
-                _KEY_ALERT_ACTIVE: stats_noise["max"] >= target_noise
-                if stats_noise
-                else False,
-                _KEY_ALERT_CURRENT: stats_noise["max"] if stats_noise else None,
-                _KEY_ALERT_TARGET: target_noise,
-            },
-            _KEY_CLICKS: {
-                _KEY_ALERT_ACTIVE: stats_click["max"] >= target_clicks
-                if stats_click
-                else False,
-                _KEY_ALERT_CURRENT: stats_click["max"] if stats_click else None,
-                _KEY_ALERT_TARGET: target_clicks,
-            },
+            _KEY_ORIENTATION: _get_alert_body(df=df_orientation, target=target_orient),
+            _KEY_NOISE: _get_alert_body(df=df_noise, target=target_noise),
+            _KEY_CLICKS: _get_alert_body(df=df_clicks, target=target_clicks),
         }
 
         _logger.info("Alert:\n%s", alert_body)
 
         await mqtt_client.publish(_TOPIC_ALERT, json.dumps(alert_body), qos=alert_qos)
+
+        all_alerts_active = all(
+            [item[_KEY_ALERT_ACTIVE] for item in alert_body.values()]
+        )
+
+        _logger.log(
+            logging.INFO if all_alerts_active else logging.DEBUG,
+            "All alerts active: %s",
+            all_alerts_active,
+        )
+
+        if all_alerts_active and _ARG_NEXT_SLIDE_INDEX is not None:
+            await mqtt_client.publish(
+                _TOPIC_SLIDES_COMMAND,
+                json.dumps({"method": "slide", "args": [_ARG_NEXT_SLIDE_INDEX]}),
+                qos=alert_qos,
+            )
 
         await asyncio.sleep(_ITER_SLEEP_SECS)
 
