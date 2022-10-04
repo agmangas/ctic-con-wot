@@ -1,5 +1,5 @@
 <script>
-  import Slides from './lib/Slides.svelte';
+  import Slides from './Presentation.svelte';
   import CatInDanger from './lib/CatInDanger.svelte';
   import { fly } from 'svelte/transition';
   

@@ -1,48 +1,9 @@
 <script>
-  import Reveal from "reveal.js";
-
-  import { onMount } from "svelte";
-  import { createEventDispatcher } from 'svelte';
-  import MqttClient from "./MQTTClient.svelte";
-
-  const GRAFANA_URL = import.meta.env.VITE_SLIDES_APP_GRAFANA_URL || "http://localhost:3000";
-
-  // Event dispatcher
-	const dispatch = createEventDispatcher();
-
-  // Binded to DOM
-  let deckCanvas;
-
-  // Initalize deck canvas
-  let deck;
-
-  onMount(() => {
-    deck = Reveal(deckCanvas, {
-      minScale: 0.2,
-    });
-    deck.initialize();
-    deck.on('slidechanged', slideChangeHandler);
-    
-  });
-
-  const slideChangeHandler = (() => {
-    let previousIndexh = 0;
-    return (event)=> {
-      dispatch('slide-changed', {
-          previousIndexh: previousIndexh,
-          indexh: event.indexh,
-          totalSlides: deck.getTotalSlides()
-        });
-      previousIndexh = event.indexh;
-    }
-	})();
-
+  //Take parameters
+  export let GRAFANA_URL;
 </script>
 
-<MqttClient on:command="{e => window.postMessage(e.detail.command)}"/>
 
-<div class="reveal" bind:this={deckCanvas}>
-  <div class="slides">
     <section>
       <h1>WoT</h1>
       <h2>Web of Things</h2>
@@ -122,11 +83,4 @@
         <p>and some more notes</p>
       </aside>
     </section>
-  </div>
-</div>
-
-<style>
-  div {
-    table-layout: fixed;
-  }
-</style>
+ 
