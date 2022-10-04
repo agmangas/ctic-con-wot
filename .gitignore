@@ -269,3 +269,5 @@ dist
 #######
 
 .vscode
+.vagrant/
+**/.idea/

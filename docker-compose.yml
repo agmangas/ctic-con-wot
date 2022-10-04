@@ -10,6 +10,10 @@ services:
     environment:
       SECRET: ${SENSORS_APP_SECRET:-supersecret}
       LOG_LEVEL: ${SENSORS_LOG_LEVEL:-DEBUG}
+      MQTT_BROKER: ${MQTT_BROKER}
+      MQTT_PORT: ${MQTT_PORT}
+      MQTT_TRANSPORT: ${MQTT_TRANSPORT}
+      MQTT_TOPICS: ${MOSQUITTO_TOPIC}
     depends_on:
       - influx
       - mosquitto
@@ -21,6 +25,14 @@ services:
       LOG_LEVEL: ${AGENT_LOG_LEVEL:-DEBUG}
       MQTT_HOST: mosquitto
       MQTT_PORT: 9001
+      INFLUX_URL: http://influx:8086
+      INFLUX_ORG: ${INFLUX_ORG}
+      INFLUX_TOKEN: ${INFLUX_TOKEN}
+      INFLUX_BUCKET: ${INFLUX_BUCKET}
+      TARGET_AVG_ORIENTATION_DIFF: ${TARGET_AVG_ORIENTATION_DIFF}
+      TARGET_AVG_CLICKS: ${TARGET_AVG_CLICKS}
+      TARGET_AVG_NOISE: ${TARGET_AVG_NOISE}
+      TARGET_NUM_CLIENTS: ${TARGET_NUM_CLIENTS}
     depends_on:
       - influx
       - mosquitto

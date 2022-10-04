@@ -98,7 +98,7 @@ function App() {
       return () => {};
     }
 
-    const throttledHandler = _.throttle(handleOrientation, 200);
+    const throttledHandler = _.throttle(handleOrientation, 100);
 
     window.addEventListener("deviceorientation", throttledHandler);
 
@@ -160,13 +160,18 @@ function App() {
         const processor = context.createScriptProcessor(1024, 1, 1);
         source.connect(processor);
         processor.connect(context.destination);
-        processor.onaudioprocess = _.throttle(onAudioProcess, 200);
+        processor.onaudioprocess = _.throttle(onAudioProcess, 100);
       })
       .catch(function (error) {
         console.warn(error);
         setAudioError(error);
       });
   }, [numClicks, audioActive, onAudioProcess, mqttClient]);
+
+  const roundFixed = useCallback((num, len) => {
+    const factor = 10 ** len;
+    return (Math.round(num * factor) / factor).toFixed(len);
+  }, []);
 
   return (
     <Container fluid={true}>
@@ -176,40 +181,53 @@ function App() {
         <Col xs={12} className="text-center">
           <h1 className="mb-3">The WoT Team presents</h1>
           <h3 className="mb-3 text-muted">CTIC-CON 2022</h3>
-          <Button className="mb-3" color="primary" size="lg" onClick={onClick}>
-            Dai click ahí ho
+          <Button
+            className="mb-3"
+            color={numClicks > 0 ? "secondary" : "primary"}
+            size="lg"
+            onClick={onClick}
+          >
+            {numClicks > 0 ? (
+              <span>Dai click ahí ho</span>
+            ) : (
+              <span>Click para arrancar porfa</span>
+            )}
           </Button>
-          <Alert className="mt-3 me-5 ms-5" color="info">
-            Número de clicks: <strong>{numClicks}</strong>
-          </Alert>
-          {!!currOrientation && (
-            <Alert className="mt-3 me-5 ms-5" color="info">
-              <code>Alpha:</code>&nbsp;
-              <strong>{_.round(currOrientation.alpha, 2)}</strong>
-              <br />
-              <code>Beta:</code>&nbsp;
-              <strong>{_.round(currOrientation.beta, 2)}</strong>
-              <br />
-              <code>Gamma:</code>&nbsp;
-              <strong>{_.round(currOrientation.gamma, 2)}</strong>
-            </Alert>
-          )}
-          {!_.isNil(audioMean) && (
-            <Alert className="mt-3 me-5 ms-5" color="info">
-              <span>Nivel de ruido:</span>&nbsp;
-              <strong>{_.round(audioMean, 3)}</strong>
-              <br />
-            </Alert>
-          )}
-          {!currOrientation && (
-            <Alert className="mt-3 me-5 ms-5" color="warning">
-              No podemos leer el sensor de orientación 😔
-            </Alert>
-          )}
-          {!!audioError && (
-            <Alert className="mt-3 me-5 ms-5" color="warning">
-              No podemos leer el micrófono 😔
-            </Alert>
+          {numClicks > 0 && (
+            <>
+              <Alert className="mt-3 me-5 ms-5" color="info">
+                Número de clicks: <strong>{numClicks}</strong>
+              </Alert>
+              {!!currOrientation && (
+                <Alert className="mt-3 me-5 ms-5" color="info">
+                  <code>Alpha:</code>&nbsp;
+                  <strong>{roundFixed(currOrientation.alpha, 2)}</strong>
+                  <br />
+                  <code>Beta:</code>&nbsp;
+                  <strong>{roundFixed(currOrientation.beta, 2)}</strong>
+                  <br />
+                  <code>Gamma:</code>&nbsp;
+                  <strong>{roundFixed(currOrientation.gamma, 2)}</strong>
+                </Alert>
+              )}
+              {!_.isNil(audioMean) && (
+                <Alert className="mt-3 me-5 ms-5" color="info">
+                  <span>Nivel de ruido:</span>&nbsp;
+                  <strong>{roundFixed(audioMean, 3)}</strong>
+                  <br />
+                </Alert>
+              )}
+              {!currOrientation && (
+                <Alert className="mt-3 me-5 ms-5" color="warning">
+                  No podemos leer el sensor de orientación 😔
+                </Alert>
+              )}
+              {!!audioError && (
+                <Alert className="mt-3 me-5 ms-5" color="warning">
+                  Error leyendo el micrófono 😔
+                </Alert>
+              )}
+            </>
           )}
         </Col>
       </Row>
