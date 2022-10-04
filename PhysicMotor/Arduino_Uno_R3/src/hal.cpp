@@ -42,7 +42,8 @@ void MotorOff()
 void TestMotor(bool useButton = true)
 {
     Serial.println("############ STARTING TESTING PHASE . . . ############");
-    WaitForButton();
+    if(useButton)
+        WaitForButton();
     MotorOn();
     WaitForSeconds(1);
     MotorOff();
