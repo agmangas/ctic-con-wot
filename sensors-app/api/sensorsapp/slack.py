@@ -2,6 +2,7 @@ import os
 import logging
 import datetime
 import platform
+import json
 
 from flask import Blueprint, request, Response
 
@@ -49,7 +50,7 @@ def system():
                     "args": [ SLIDE ]
                 }
                 logging.info(msg_to_send)
-                mqttClient.publish(TOPIC ,msg_to_send)
+                mqttClient.publish(TOPIC, json.dumps(msg_to_send))
                 return Response("{'success':'True'}", status=200, mimetype='application/json')
             except Exception as e:
                 return Response(f"{'success':'False', 'message': 'Error in MQTTClient: {e}'}", status=500, mimetype='application/json')
