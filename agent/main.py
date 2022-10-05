@@ -14,6 +14,21 @@ from influxdb_client.client.warnings import MissingPivotFunction
 
 warnings.simplefilter("ignore", MissingPivotFunction)
 
+_MQTT_WS_TRANSPORT = "websockets"
+_START = "-2m"
+_WINDOW_PERIOD = "10s"
+_ITER_SLEEP_SECS = 2.0
+_TOPIC_CURRENT_STATS = "sensors-app/aggregated-stats"
+_TOPIC_ALERT = "sensors-app/alert"
+_TOPIC_SLIDES_COMMAND = "slides/command"
+_KEY_ORIENTATION = "orientation"
+_KEY_CLICKS = "clicks"
+_KEY_NOISE = "noise"
+_KEY_ALERT_ACTIVE = "active"
+_KEY_ALERT_CURRENT = "current"
+_KEY_ALERT_TARGET = "target"
+_ENV_NEXT_SLIDE = "SENSORS_NEXT_SLIDE"
+
 _ARG_LOG_LEVEL = os.getenv("LOG_LEVEL", "DEBUG")
 _ARG_MQTT_HOST = os.getenv("MQTT_HOST", "localhost")
 _ARG_MQTT_PORT = int(os.getenv("MQTT_PORT", 9001))
@@ -29,22 +44,8 @@ _ARG_TARGET_AVG_NOISE = float(os.getenv("TARGET_AVG_NOISE", 1.0))
 _ARG_TARGET_NUM_CLIENTS = float(os.getenv("TARGET_NUM_CLIENTS", 8))
 
 _ARG_NEXT_SLIDE_INDEX = (
-    int(os.getenv("NEXT_SLIDE_INDEX")) if os.getenv("NEXT_SLIDE_INDEX") else None
+    int(os.getenv(_ENV_NEXT_SLIDE)) if os.getenv(_ENV_NEXT_SLIDE) else None
 )
-
-_MQTT_WS_TRANSPORT = "websockets"
-_START = "-2m"
-_WINDOW_PERIOD = "10s"
-_ITER_SLEEP_SECS = 2.0
-_TOPIC_CURRENT_STATS = "sensors-app/aggregated-stats"
-_TOPIC_ALERT = "sensors-app/alert"
-_TOPIC_SLIDES_COMMAND = "slides/command"
-_KEY_ORIENTATION = "orientation"
-_KEY_CLICKS = "clicks"
-_KEY_NOISE = "noise"
-_KEY_ALERT_ACTIVE = "active"
-_KEY_ALERT_CURRENT = "current"
-_KEY_ALERT_TARGET = "target"
 
 _logger = logging.getLogger(__name__)
 
