@@ -299,6 +299,8 @@ async def _check_temperature(influx_client, mqtt_client, start="-40s", threshold
             ).format(bucket=_ARG_INFLUX_BUCKET, start=start, threshold=threshold)
         )
 
+        df = df[df._value >= threshold]
+
         _logger.debug("Temperature DataFrame:\n%s", df)
 
         if not df.empty and _ARG_NEXT_SLIDE_TEMPERATURE is not None:
