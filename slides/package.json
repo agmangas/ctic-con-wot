@@ -16,6 +16,7 @@
   "dependencies": {
     "animejs": "^3.2.1",
     "mqtt": "^4.3.7",
+    "npm": "^8.19.2",
     "reveal.js": "^4.3.1"
   }
 }
