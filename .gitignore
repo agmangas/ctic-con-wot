@@ -271,3 +271,7 @@ dist
 .vscode
 .vagrant/
 **/.idea/
+
+
+
+!slides/dist/*
