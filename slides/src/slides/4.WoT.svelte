@@ -1,8 +1,20 @@
+<script>
+  //Take parameters
+  export let GRAFANA_URL;
+</script>
+
 <!-- Slide N 4 -->
 <!-- SECOND GAME, SENSOR -->
 <section data-background="#000FFF">
   <h1>¿Qué somos?</h1>
   <p class="fragment">(Sensores: al fuego! 🔥)</p>
+  <iframe
+    title="Dashboard"
+    class="r-stretch"
+    src="{GRAFANA_URL}/d-solo/WQMH-s44k/new-dashboard?orgId=1&from=1664999035190&to=1664999335190&panelId=2"
+    width="250"
+    frameborder="0"
+  />
 </section>
 
 <!-- Slide N 5 (Sensor goes to this slide)-->
@@ -53,10 +65,8 @@
 
 <!-- Slide N 9 -->
 <section data-transition="convex">
-  Ahora en serio. 
-  <div class="fragment fade-in">
-    Le preguntamos a Andrés
-  </div>
+  Ahora en serio.
+  <div class="fragment fade-in">Le preguntamos a Andrés</div>
 </section>
 
 <!-- Slide N 10 - FOURTH GAME, FLUTE-->
@@ -81,7 +91,7 @@
     <li>Sistemas distribuidos</li>
     <li>Edge computing</li>
     <li>Gobernanza de datos</li>
-    <li>DevOps</li> 
-    <li>Y demasiadas cosas más</li> 
+    <li>DevOps</li>
+    <li>Y demasiadas cosas más</li>
   </ol>
 </section>

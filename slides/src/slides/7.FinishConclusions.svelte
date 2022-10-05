@@ -16,4 +16,9 @@
 <!-- Slide N 18 -->
 <section>
   Chao
+  <img
+  src="/images/git.png"
+  alt="Git Info"
+  class="r-stretch"
+/>
 </section>
