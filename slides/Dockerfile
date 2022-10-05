@@ -2,15 +2,14 @@ FROM node:alpine
 
 ENV SLIDES_PORT $SLIDES_PORT
 
-RUN mkdir -p ./app
-WORKDIR app
+WORKDIR .
 
 # Install dependencies
-COPY ../package*.json .
+COPY ./package*.json ./
 
 RUN npm install
 
-COPY .. .
+COPY . .
 
 EXPOSE $SLIDES_PORT
 
