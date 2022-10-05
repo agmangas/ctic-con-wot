@@ -187,11 +187,9 @@ def _get_alert_body(df, target, round_len=3, key_value="_value"):
 
 
 async def _next_slide(mqtt_client, slide_idx, qos=2):
-    await mqtt_client.publish(
-        _TOPIC_SLIDES_COMMAND,
-        json.dumps({"method": "slide", "args": [slide_idx]}),
-        qos=qos,
-    )
+    payload = {"method": "slide", "args": [slide_idx]}
+    _logger.info("Publishing to '%s': %s", _TOPIC_SLIDES_COMMAND, payload)
+    await mqtt_client.publish(_TOPIC_SLIDES_COMMAND, json.dumps(payload), qos=qos)
 
 
 async def _check_sensors(influx_client, mqtt_client, stats_qos=0, alert_qos=2):
@@ -274,6 +272,7 @@ async def _check_button(influx_client, mqtt_client, start="-60s"):
         )
 
         _logger.debug("Button DataFrame:\n%s", df)
+        _logger.debug("Button next slide: %s", _ARG_NEXT_SLIDE_BUTTON)
 
         if not df.empty and _ARG_NEXT_SLIDE_BUTTON is not None:
             await _next_slide(mqtt_client=mqtt_client, slide_idx=_ARG_NEXT_SLIDE_BUTTON)
