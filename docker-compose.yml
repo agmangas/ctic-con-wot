@@ -142,19 +142,21 @@ services:
         target: /var/lib/grafana
 
   # SLIDES
-  # slides-app:
-  #   build:
-  #     context: slides      
-  #     args:
-  #       SLIDES_PORT: ${SLIDES_PORT}
-  #   ports:
-  #     - "${SLIDES_PORT}:5173"
-  #   restart: on-failure
-  #   environment:
-  #     VITE_SLIDES_APP_GRAFANA_URL: ${VITE_SLIDES_APP_GRAFANA_URL}
-  #     VITE_SLIDES_APP_MQTT_URL: ${VITE_SLIDES_APP_MQTT_URL}
-  #   depends_on:
-  #     - sensors-app
+  slides-app:
+      image: nginx:1.10
+      volumes:
+      - ./slides/dist:/var/www/html
+      - ./slides/server_conf/certs:/etc/nginx/certs
+      - ./slides/server_conf/config:/etc/nginx
+      ports:
+      - "80:80"
+      - "443:443"
+      command: /etc/nginx/run_nginx.sh
+      environment:
+        APP_HOST: localhost
+        VITE_SLIDES_APP_GRAFANA_URL: ${VITE_SLIDES_APP_GRAFANA_URL}
+        VITE_SLIDES_APP_MQTT_URL: ${VITE_SLIDES_APP_MQTT_URL}
+      restart: unless-stopped  
 
 volumes:
   influx_data:
