@@ -9,7 +9,7 @@
     import { fade } from 'svelte/transition';
     import { onMount } from 'svelte';
 
-    const TIME_TO_DEATH = 5e3;
+    const TIME_TO_DEATH = 510e3;
 
     // Binded to elements in the DOM
     let trainWrapperEl;
