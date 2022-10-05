@@ -11,7 +11,7 @@
   <iframe
     title="Dashboard"
     class="r-stretch"
-    src="{GRAFANA_URL}/dashboard-solo/new?orgId=1&from=1664998781565&to=1664999081565&panelId=2"
+    src="{GRAFANA_URL}/d-solo/WQMH-s44k/new-dashboard?orgId=1&from=1664999035190&to=1664999335190&panelId=2"
     width="250"
     frameborder="0"
   />
