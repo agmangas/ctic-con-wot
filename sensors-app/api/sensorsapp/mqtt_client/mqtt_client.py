@@ -53,6 +53,7 @@ class MqttClient():
             #self._client.username_pw_set(username, password)
             self._client.on_connect = on_connect
             if(self.transport=="websockets"):
+                self.ws_set_options(headers={"Host": self.broker})
                 self._client.tls_set()
             self._client.connect(self.broker, self.port)
 
