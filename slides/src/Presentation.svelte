@@ -33,7 +33,7 @@
       deck = Reveal(deckCanvas, {
         minScale: 0.2,
       });
-      deck.initialize();
+      deck.initialize({ slideNumber: true });
       deck.on('slidechanged', slideChangeHandler);
       
     });
@@ -46,7 +46,7 @@
         dispatch('slide-changed', {
             previousIndexh: previousIndexh,
             indexh: event.indexh,
-            totalSlides: deck.getTotalSlides()
+            progress: deck.getProgress() //0 if stay on first slide, 1 if is the last one 
           });
         previousIndexh = event.indexh;
       }
