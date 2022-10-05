@@ -17,6 +17,22 @@ services:
     depends_on:
       - influx
       - mosquitto
+  
+  sound-recognition:
+    build:
+      context: sound-recognition
+    ports:
+      - "${SOUND_RECOGNITION_PORT}:3000"
+    restart: on-failure
+    environment:
+      MQTT_BROKER: ${MQTT_BROKER}
+      MQTT_PORT: ${MQTT_PORT}
+      MQTT_TRANSPORT: ${MQTT_TRANSPORT}
+      MQTT_TOPICS: ${MOSQUITTO_TOPIC}
+      SENSORS_APP_MQTT_URL: ${SENSORS_APP_MQTT_URL}
+    depends_on:
+      - influx
+      - mosquitto
 
   agent:
     build:
