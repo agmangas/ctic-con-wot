@@ -7,16 +7,15 @@
 <!-- SECOND GAME, SENSOR -->
 <section data-background="#000FFF">
   <h3>¿Qué somos?</h3>
-  <div class="fragment">
-    <h2>QUEMA EL SENSOR</h2>
-    <iframe
-      title="Dashboard"
-      class="r-stretch"
-      src="{GRAFANA_URL}/d-solo/WQMH-s44k/new-dashboard?orgId=1&from=1664999035190&to=1664999335190&panelId=2"
-      width="250"
-      frameborder="0"
-    />
-  </div>
+
+  <h2>QUEMA EL SENSOR</h2>
+  <iframe
+    title="Dashboard"
+    class="r-stretch"
+    src="{GRAFANA_URL}/d-solo/WQMH-s44k/new-dashboard?orgId=1&from=1664999035190&to=1664999335190&panelId=2"
+    width="250"
+    frameborder="0"
+  />
 </section>
 
 <!-- Slide N 5 (Sensor goes to this slide)-->
