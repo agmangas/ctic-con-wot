@@ -53,6 +53,7 @@
     title="Juego Flauta"
     class="r-stretch"
     src="https://wotsound.test.ctic.es/flauta/"
+    allow="camera *;microphone *"
     width="250"
     frameborder="0"
   />
