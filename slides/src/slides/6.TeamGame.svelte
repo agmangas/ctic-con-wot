@@ -5,7 +5,7 @@
 
 <!-- Slide N 15 -->
 <!-- TEAM GAME -->
-<section>
+<section data-background="000FFF">
   <section>
     <h1>Salvemos a Wotito</h1>
     <small style="font-family: monospace">https://wotapp.test.ctic.es</small>
