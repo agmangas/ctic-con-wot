@@ -257,7 +257,7 @@ async def _check_sensors(influx_client, mqtt_client, stats_qos=0, alert_qos=2):
         await asyncio.sleep(_ITER_SLEEP_SECS)
 
 
-async def _check_button(influx_client, mqtt_client, start="-15s"):
+async def _check_button(influx_client, mqtt_client, start="-60s"):
     while True:
         query_api = influx_client.query_api()
 
@@ -272,6 +272,8 @@ async def _check_button(influx_client, mqtt_client, start="-15s"):
                 start=start,
             )
         )
+
+        _logger.debug("Button DataFrame:\n%s", df)
 
         if not df.empty and _ARG_NEXT_SLIDE_BUTTON is not None:
             await _next_slide(mqtt_client=mqtt_client, slide_idx=_ARG_NEXT_SLIDE_BUTTON)
