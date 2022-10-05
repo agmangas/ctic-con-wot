@@ -1,6 +1,6 @@
 <!-- Slide N 4 -->
 <!-- SECOND GAME, SENSOR -->
-<section>
+<section data-background="#000FFF">
   <h3>¿Qué somos?</h3>
   <h1 class="fragment">QUEMA EL SENSOR</h1>
 </section>
@@ -46,7 +46,12 @@
 </section>
 
 <!-- Slide N 9 -->
-<section data-transition="convex">Ahora en serio blabla</section>
+<section data-transition="convex">
+  Ahora en serio. 
+  <div class="fragment fade-in">
+    Le preguntamos a Andrés
+  </div>
+</section>
 
 <!-- Slide N 10 - FOURTH GAME, FLUTE-->
 <section data-transition="convex" data-background="#000FFF">
