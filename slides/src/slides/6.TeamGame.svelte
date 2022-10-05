@@ -13,10 +13,9 @@
       src="/images/qr.png"
       alt="https://wotapp.test.ctic.es"
       class="r-stretch"
-    />    
+    />
   </section>
   <section>
-    <h1>Salvemos a Wotito</h1>
     <small style="font-family: monospace">https://wotapp.test.ctic.es</small>
     <iframe
       title="Dashboard"
