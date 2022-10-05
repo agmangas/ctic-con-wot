@@ -68,6 +68,7 @@
     <li>Sensórica</li>
     <li>Arquitectura Software</li>
     <li>Sistemas distribuidos</li>
+    <li>Edge computing</li>
     <li>Gobernanza de datos</li>
     <li>DevOps</li> 
     <li>Y demasiadas cosas más</li> 

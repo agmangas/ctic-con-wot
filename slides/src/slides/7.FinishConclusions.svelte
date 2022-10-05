@@ -5,7 +5,6 @@
   <ol>
     <li>5G</li>
     <li>FPGAs</li>
-    <li>Edge computing</li>
     <li>RUST</li>
     <li>Más RUST</li>
     <li>Automatización</li> 
