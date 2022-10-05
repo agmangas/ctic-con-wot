@@ -10,8 +10,8 @@
     if (e.detail.indexh === 0) {
       presentationState = "idle"
     }
-    else if (e.detail.indexh === 1 && e.detail.previousIndexh === 0){
-      presentationState = "running"
+    else if (e.detail.indexh === 4 && e.detail.previousIndexh === 3){
+      presentationState = "running" //Cat appears
     }
     else if (e.detail.indexh === (e.detail.totalSlides - 1)){
       presentationState = "done"

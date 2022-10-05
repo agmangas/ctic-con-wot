@@ -3,7 +3,13 @@
 
     //Slides
     export let slideHandler;
-    import Intro from "./slides/Intro.svelte"
+    import Intro from "./slides/1.Intro.svelte"
+    import Team from "./slides/2.Team.svelte"
+    import Cat from "./slides/3.CatInDanger.svelte"
+    import WoT from "./slides/4.WoT.svelte"
+    import Collaboration from "./slides/5.Collaboration.svelte"
+    import TeamGame from "./slides/6.TeamGame.svelte"
+    import FinishConclusions from "./slides/7.FinishConclusions.svelte"
     //
 
     import { onMount } from "svelte";
@@ -57,12 +63,18 @@
         window.postMessage(e.detail.command)
     }
     else if(command.method === "slide")
-        console.log("The slide inside command is not the next one, lets ignore event")
+        console.log("The input slide ["+ command.args[0] +"] inside command is not the next one [current is: "+(previousIndexh)+"], lets ignore event")
 }}"/>
 
     <div class="reveal" bind:this={deckCanvas}>
         <div class="slides">
-            <Intro {GRAFANA_URL}/>
+            <Intro/>
+            <Team/>
+            <Cat/>
+            <WoT/> 
+            <Collaboration/>
+            <TeamGame {GRAFANA_URL}/>
+            <FinishConclusions/>
         </div>
     </div>
     
