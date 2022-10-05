@@ -2,12 +2,12 @@
 <!-- FIFTH GAME -->
 <section data-background="#000FFF">
   <h3>Colaboramos con otra gente</h3>
-  <h1 class="fragment">SLACK 🤖</h1>
+  <p class="fragment">Wot, échanos un cable por #general pls 🤖</p>
 </section>
 
 <!-- Slide N 13 (Slack bot goes to this slide)-->
 <section>
-  <h1>TODAS LAS AREAS</h1>
+  <h1>TODAS LAS ÁREAS</h1>
   <img src="/images/DrAndresSaid.png" alt="Dr. Andres" class="r-stretch" />
 </section>
 

@@ -8,12 +8,13 @@
 <section data-background="#000FFF">
   <section>
     <h1>Salvemos a Wotito</h1>
-    <small style="font-family: monospace">https://wotapp.test.ctic.es</small>
     <img
       src="/images/qr.png"
       alt="https://wotapp.test.ctic.es"
       class="r-stretch"
     />
+    <br>
+    <small style="font-family: monospace">https://wotapp.test.ctic.es</small>
   </section>
   <section>
     <small style="font-family: monospace">https://wotapp.test.ctic.es</small>

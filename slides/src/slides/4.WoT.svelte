@@ -1,19 +1,21 @@
 <!-- Slide N 4 -->
 <!-- SECOND GAME, SENSOR -->
 <section data-background="#000FFF">
-  <h3>¿Qué somos?</h3>
-  <h1 class="fragment">QUEMA EL SENSOR</h1>
+  <h1>¿Qué somos?</h1>
+  <p class="fragment">(Sensores: al fuego! 🔥)</p>
 </section>
 
 <!-- Slide N 5 (Sensor goes to this slide)-->
 <section>
   <h1>IoT</h1>
-  <h2>Internet of Things</h2>
-  <h3 class="fragment">Internet = Comunicaciones</h3>
-  <h3 class="fragment">Things = Cosas</h3>
+  <p>Internet of Things</p>
+  <br/>
+  <h3 class="fragment">Internet ➡ Comunicaciones</h3>
+  <h3 class="fragment">Things ➡ Cosas</h3>
+  <br/>
   <div class="fragment fade-in">
     <p>Cosas que se comunican</p>
-    <p>Y servicios para usar sus datos obtenidos</p>
+    <p>Y servicios para procesar los datos obtenidos</p>
   </div>
 </section>
 
@@ -22,7 +24,8 @@
   <h2>¿Y WoT?</h2>
   <p class="fragment">Cambiamos Internet por Web</p>
   <div class="fragment fade-in">
-    <h3>ESTANDAR</h3>
+    <br/>
+    <h3>📃 ESTÁNDAR 📃</h3>
     <p>para saber cómo se tienen que comunicar entre sí</p>
   </div>
 </section>
@@ -31,9 +34,12 @@
 <!-- THIRD GAME, talk 0/1 -->
 <section>
   <h3>Y... ¿Cómo lo hacemos?</h3>
-  <h1 class="fragment">
-    <i>Aquí había un evento pero se nos iba de tiempo ⏱️</i>
-  </h1>
+  <p class="fragment">
+    <i>Aquí había un evento pero de verdad que vamos mal de tiempo ⏱️</i>
+  </p>
+    <p class="fragment">
+    <i>Aguanta wotito</i>
+  </p>
 </section>
 
 <!-- Slide N 8 (0/1 goes to this slide)-->
@@ -55,7 +61,7 @@
 
 <!-- Slide N 10 - FOURTH GAME, FLUTE-->
 <section data-transition="convex" data-background="#000FFF">
-  <h3>¿Que cosas hacemos? 🎺</h3>
+  <h3>¿Qué cosas hacemos? 🎺</h3>
   <iframe
     title="Juego Flauta"
     class="r-stretch"

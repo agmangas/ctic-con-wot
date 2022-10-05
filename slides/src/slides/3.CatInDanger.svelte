@@ -4,11 +4,14 @@
   <h2 class="fragment">Wotito esta en peligro!!! 🆘</h2>
 
   <div class="fragment step-fade-in-then-out">
-    <p>Debemos pagar el rescate</p>
-    <h1>No exceder el tiempo</h1>
+    <p>Han visto qué hemos traído y creen que no nos da tiempo</p>
+  </div>
+  <div class="fragment step-fade-in-then-out">
+    <h1>¡Y han raptado a Wotito! 😱</h1>
   </div>
   <div class="fragment fade-in">
+    <p>Hay que acabar a tiempo y salvaremos a Wotito</p>
     <h1>Pero será difícil</h1>
-    <p>Hay varias pruebas</p>
+    <p>Tenemos varias... cosas 😞</p>
   </div>
 </section>
