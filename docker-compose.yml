@@ -17,7 +17,7 @@ services:
     depends_on:
       - influx
       - mosquitto
-  
+
   sound-recognition:
     build:
       context: sound-recognition
@@ -68,6 +68,7 @@ services:
       - type: volume
         source: influx_data
         target: /var/lib/influxdb2
+
   influx-setup:
     image: influxdb:2.4.0
     command:
@@ -109,7 +110,7 @@ services:
         source: ./telegraf.conf
         target: /opt/telegraf.conf
         read_only: true
-        
+
   mosquitto:
     image: agmangas/mosquitto-websockets:latest
     ports:
@@ -141,19 +142,18 @@ services:
         source: grafana_data
         target: /var/lib/grafana
 
-  # SLIDES
   slides-app:
-      image: nginx:1.10
-      volumes:
+    image: nginx:1.10
+    volumes:
       - ./slides/dist:/var/www/html
       - ./slides/server_conf/config:/etc/nginx
-      ports:
+    ports:
       - "8282:80"
-      environment:
-        APP_HOST: localhost
-        VITE_SLIDES_APP_GRAFANA_URL: ${VITE_SLIDES_APP_GRAFANA_URL}
-        VITE_SLIDES_APP_MQTT_URL: ${VITE_SLIDES_APP_MQTT_URL}
-      restart: on-failure
+    environment:
+      APP_HOST: localhost
+      VITE_SLIDES_APP_GRAFANA_URL: ${VITE_SLIDES_APP_GRAFANA_URL}
+      VITE_SLIDES_APP_MQTT_URL: ${VITE_SLIDES_APP_MQTT_URL}
+    restart: on-failure
 
 volumes:
   influx_data:
