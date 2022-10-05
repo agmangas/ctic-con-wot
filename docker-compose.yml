@@ -53,6 +53,7 @@ services:
     depends_on:
       - influx
       - mosquitto
+
   influx:
     image: influxdb:2.4.0
     ports:
@@ -86,6 +87,7 @@ services:
         source: ./init-influx.sh
         target: /opt/init-influx.sh
         read_only: true
+
   telegraf:
     image: telegraf:1.22
     command:
@@ -107,12 +109,14 @@ services:
         source: ./telegraf.conf
         target: /opt/telegraf.conf
         read_only: true
+        
   mosquitto:
     image: agmangas/mosquitto-websockets:latest
     ports:
       - "${MOSQUITTO_PORT_TCP:-1883}:1883"
       - "${MOSQUITTO_PORT_WEB:-9001}:9001"
     restart: on-failure
+
   grafana:
     image: grafana/grafana-oss:9.0.9
     ports:
@@ -123,6 +127,7 @@ services:
       INFLUX_TOKEN: ${INFLUX_TOKEN}
       GF_PANELS_DISABLE_SANITIZE_HTML: "true"
       GF_SECURITY_ALLOW_EMBEDDING: "true"
+      GF_AUTH_ANONYMOUS_ENABLED: ${GF_AUTH_ANONYMOUS_ENABLED}
     depends_on:
       - influx
       - mosquitto
@@ -135,6 +140,22 @@ services:
       - type: volume
         source: grafana_data
         target: /var/lib/grafana
+
+  # SLIDES
+  # slides-app:
+  #   build:
+  #     context: slides      
+  #     args:
+  #       SLIDES_PORT: ${SLIDES_PORT}
+  #   ports:
+  #     - "${SLIDES_PORT}:5173"
+  #   restart: on-failure
+  #   environment:
+  #     VITE_SLIDES_APP_GRAFANA_URL: ${VITE_SLIDES_APP_GRAFANA_URL}
+  #     VITE_SLIDES_APP_MQTT_URL: ${VITE_SLIDES_APP_MQTT_URL}
+  #   depends_on:
+  #     - sensors-app
+
 volumes:
   influx_data:
   grafana_data:
