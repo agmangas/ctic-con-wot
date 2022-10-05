@@ -6,5 +6,7 @@ export default defineConfig({
   plugins: [svelte()],
   assetsInclude: ['**/*.md', '**/*.png'],
   resolve: { alias: { mqtt: 'mqtt/dist/mqtt.js', }, },
-  server: {host: true}
+  server: {
+    host: '0.0.0.0',
+}
 })

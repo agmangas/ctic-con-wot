@@ -7,7 +7,7 @@
 
     const TOPIC_SLIDES_COMMAND = "slides/command";
 
-    const MQTT_URL = import.meta.env.VITE_SLIDES_APP_MQTT_URL || "ws://localhost:9001";
+    const MQTT_URL = import.meta.env.VITE_SLIDES_APP_MQTT_URL || "ws://localTESThost:9001";
     const client = mqtt.connect(MQTT_URL);
     console.log(`Connecting to: ${MQTT_URL}`);
 
