@@ -13,7 +13,7 @@
     else if (e.detail.indexh === 4 && e.detail.previousIndexh === 3){
       presentationState = "running" //Cat appears
     }
-    else if (e.detail.indexh === (e.detail.totalSlides - 1)){
+    else if (e.detail.progress === 1){
       presentationState = "done"
     }
   }
@@ -40,6 +40,7 @@
     width: 15%;
     background-color: rgb(25, 34, 39);
   }
+
   .container {
     width: 100%;
     height: 100%;

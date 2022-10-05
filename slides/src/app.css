@@ -67,6 +67,13 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+.container{
+    display: flex;
+}
+.col{
+    flex: 1;
+}
+
 .reveal .slides section .fragment.step-fade-in-then-out {
 	opacity: 0;
 	display: none; }

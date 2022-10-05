@@ -9,6 +9,26 @@
   <p class="fragment">(pero mejor)</p>
 </section>
 
+<!--
+<section>
+  <div class="container">
+
+    <div class="col">
+    Column 1 Content
+    </div>
+    
+    <div class="col">
+    Column 2 Content
+    </div>
+
+    <div class="col">
+      Column 3 Content
+      </div>
+    
+    </div>
+</section>
+-->
+
 <!-- Slide N 1 -->
 <!-- FIRST GAME, BUTTON -->
 <section>
