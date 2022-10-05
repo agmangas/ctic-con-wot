@@ -59,7 +59,8 @@ def system():
                         mimetype="application/json",
                     )
             finally:
-                mqttClient.disconnect()
+                # ToDo: Disconnect
+                pass
 
         return Response(
             "{'success':'False', 'message': 'Unexpected word'}",
