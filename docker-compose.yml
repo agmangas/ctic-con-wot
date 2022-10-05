@@ -139,6 +139,8 @@ services:
       VITE_SLIDES_APP_MQTT_URL: ${VITE_SLIDES_APP_MQTT_URL}
     networks:
       - test-network  
+    depends_on:
+      - sensors-app
 
 volumes:
   influx_data:
