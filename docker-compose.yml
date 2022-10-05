@@ -14,6 +14,7 @@ services:
       MQTT_PORT: ${MQTT_PORT}
       MQTT_TRANSPORT: ${MQTT_TRANSPORT}
       MQTT_TOPICS: ${MOSQUITTO_TOPIC}
+      SLACK_BOT_SLIDE: ${SLACK_BOT_SLIDE}
     depends_on:
       - influx
       - mosquitto
