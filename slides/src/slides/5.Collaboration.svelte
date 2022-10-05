@@ -8,7 +8,7 @@
 <!-- Slide N 13 (Slack bot goes to this slide)-->
 <section>
   <h1>TODAS LAS AREAS</h1>
-  <img src="/images/DrAndresSaid.png"  class="r-stretch">
+  <img src="/images/DrAndresSaid.png" alt="Dr. Andres" class="r-stretch" />
 </section>
 
 <!-- Slide N 14 -->
