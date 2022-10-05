@@ -6,10 +6,7 @@
 <!-- Slide N 15 -->
 <!-- TEAM GAME -->
 <section>
-  <h1>Salvemos a Wotito</h1>
-  <aside class="notes">
-    <p>Some notes</p>
-  </aside>
+  <h3>Salvemos a Wotito</h3>
   <iframe
     title="Dashboard"
     class="r-stretch"
