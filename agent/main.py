@@ -286,7 +286,7 @@ async def _check_button(influx_client, mqtt_client, start="-40s"):
         await asyncio.sleep(_ITER_SLEEP_SECS)
 
 
-async def _check_temperature(influx_client, mqtt_client, start="-40s", threshold=40):
+async def _check_temperature(influx_client, mqtt_client, start="-40s", threshold=35):
     while True:
         query_api = influx_client.query_api()
 
