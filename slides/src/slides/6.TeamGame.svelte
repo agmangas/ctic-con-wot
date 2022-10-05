@@ -13,13 +13,11 @@
   <iframe
     title="Dashboard"
     class="r-stretch"
-    src="{GRAFANA_URL}/d-solo/NJXJHOV4z/main?orgId=1&refresh=5s&from=1664873078984&to=1664873978984&panelId=2"
+    src="{GRAFANA_URL}/d/NJXJHOV4z/main?orgId=1&refresh=5s&kiosk"
     width="250"
     frameborder="0"
   />
 </section>
 
 <!-- Slide N 16 (Team game goes to this slide)-->
-<section>
-  Muy bien :)
-</section>
+<section>Muy bien :)</section>
