@@ -126,26 +126,20 @@ services:
         target: /var/lib/grafana
 
   # SLIDES
-  slides-app:
-    build:
-      context: slides      
-      args:
-        SLIDES_PORT: ${SLIDES_PORT}
-    ports:
-      - "${SLIDES_PORT}:5173"
-    restart: on-failure
-    environment:
-      VITE_SLIDES_APP_GRAFANA_URL: ${VITE_SLIDES_APP_GRAFANA_URL}
-      VITE_SLIDES_APP_MQTT_URL: ${VITE_SLIDES_APP_MQTT_URL}
-    networks:
-      - test-network  
-    depends_on:
-      - sensors-app
+  # slides-app:
+  #   build:
+  #     context: slides      
+  #     args:
+  #       SLIDES_PORT: ${SLIDES_PORT}
+  #   ports:
+  #     - "${SLIDES_PORT}:5173"
+  #   restart: on-failure
+  #   environment:
+  #     VITE_SLIDES_APP_GRAFANA_URL: ${VITE_SLIDES_APP_GRAFANA_URL}
+  #     VITE_SLIDES_APP_MQTT_URL: ${VITE_SLIDES_APP_MQTT_URL}
+  #   depends_on:
+  #     - sensors-app
 
 volumes:
   influx_data:
   grafana_data:
-
-networks:
-  test-network: 
-    driver: bridge
