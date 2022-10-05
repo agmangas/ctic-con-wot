@@ -286,7 +286,7 @@ async def _check_button(influx_client, mqtt_client, start="-40s"):
         await asyncio.sleep(_ITER_SLEEP_SECS)
 
 
-async def _check_temperature(influx_client, mqtt_client, start="-40s", threshold=35):
+async def _check_temperature(influx_client, mqtt_client, start="-40s", threshold=36):
     while True:
         query_api = influx_client.query_api()
 
@@ -301,15 +301,15 @@ async def _check_temperature(influx_client, mqtt_client, start="-40s", threshold
 
         try:
             df = df[df._value >= threshold]
-        except:
-            pass
 
-        _logger.debug("Temperature DataFrame:\n%s", df)
+            _logger.debug("Temperature DataFrame:\n%s", df)
 
-        if not df.empty and _ARG_NEXT_SLIDE_TEMPERATURE is not None:
-            await _next_slide(
-                mqtt_client=mqtt_client, slide_idx=_ARG_NEXT_SLIDE_TEMPERATURE
-            )
+            if not df.empty and _ARG_NEXT_SLIDE_TEMPERATURE is not None:
+                await _next_slide(
+                    mqtt_client=mqtt_client, slide_idx=_ARG_NEXT_SLIDE_TEMPERATURE
+                )
+        except Exception as ex:
+            _logger.warning("Temperature error: %s", ex)
 
         await asyncio.sleep(_ITER_SLEEP_SECS)
 

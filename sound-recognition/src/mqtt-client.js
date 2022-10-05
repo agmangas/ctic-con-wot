@@ -1,6 +1,6 @@
 import mqtt from "mqtt/dist/mqtt";
 
-const MQTT_URL = process.env.REACT_APP_MQTT_URL || "wss://wotmqtt.test.ctic.es:443";
+const MQTT_URL = "wss://wotmqtt.test.ctic.es:443";
 const DIAPO_ID = 4;
 
 const mqttClient = mqtt.connect(MQTT_URL);
