@@ -8,7 +8,7 @@ endif
 
 DEFAULT_GOAL: up
 
-up:
+up: slides
 	docker-compose -p ${COMPOSE_PROJECT_NAME} up -d --build
 
 down:
