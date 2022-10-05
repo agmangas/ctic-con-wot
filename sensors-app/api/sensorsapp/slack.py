@@ -13,6 +13,8 @@ blueprint = Blueprint(BLUEPRINT_NAME, __name__)
 
 # Init mqtt client
 mqttClient = MqttClient.create_from_environment()
+logging.info("-->Try to connect:")
+logging.info(mqttClient)
 mqttClient.connect()
 # Settings
 TOPIC = os.environ.get("MQTT_TOPICS", "slides/command") 
