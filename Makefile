@@ -14,4 +14,7 @@ up:
 down:
 	docker-compose -p ${COMPOSE_PROJECT_NAME} down -v
 
-.PHONY: up down
+slides:
+	cd slides && npm i && npm run build
+
+.PHONY: up down slides
