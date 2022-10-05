@@ -6,15 +6,26 @@
 <!-- Slide N 15 -->
 <!-- TEAM GAME -->
 <section>
-  <h6>Salvemos a Wotito</h6>
-  <small style="font-family: monospace">https://wotapp.test.ctic.es</small>
-  <iframe
-    title="Dashboard"
-    class="r-stretch"
-    src="{GRAFANA_URL}/d/NJXJHOV4z/main?orgId=1&refresh=5s&kiosk"
-    width="250"
-    frameborder="0"
-  />
+  <section>
+    <h1>Salvemos a Wotito</h1>
+    <img
+      src="/images/qr.png"
+      alt="https://wotapp.test.ctic.es"
+      class="r-stretch"
+    />
+    <small style="font-family: monospace">https://wotapp.test.ctic.es</small>
+  </section>
+  <section>
+    <h1>Salvemos a Wotito</h1>
+    <small style="font-family: monospace">https://wotapp.test.ctic.es</small>
+    <iframe
+      title="Dashboard"
+      class="r-stretch"
+      src="{GRAFANA_URL}/d/NJXJHOV4z/main?orgId=1&refresh=5s&kiosk"
+      width="250"
+      frameborder="0"
+    />
+  </section>
 </section>
 
 <!-- Slide N 16 (Team game goes to this slide)-->
