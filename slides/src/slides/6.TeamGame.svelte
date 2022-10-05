@@ -28,4 +28,11 @@
 </section>
 
 <!-- Slide N 16 (Team game goes to this slide)-->
-<section>Muy bien :)</section>
+<section>
+  Muy bien :)
+  <img
+  src="/images/Yisus.gif"
+  alt="Happy gif"
+  class="r-stretch"
+/>
+</section>

@@ -41,7 +41,7 @@
         <h3 class="fragment fade-in">Lamentamos su pérdida (hoy no está 😢)</h3>
       </div>
       <div class="col">
-        <img src="/images/slack/Dani.png" alt="Dani" class="r-stretch" />
+        <img src="/images/slack/Dani.gif" alt="Dani" class="r-stretch" />
       </div>
     </div>
   </section>
