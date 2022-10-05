@@ -29,7 +29,7 @@ services:
       MQTT_PORT: ${MQTT_PORT}
       MQTT_TRANSPORT: ${MQTT_TRANSPORT}
       MQTT_TOPICS: ${MOSQUITTO_TOPIC}
-      SENSORS_APP_MQTT_URL: ${SENSORS_APP_MQTT_URL}
+      SENSORS_APP_MQTT_URL: ${VITE_SLIDES_APP_MQTT_URL}
     depends_on:
       - influx
       - mosquitto
