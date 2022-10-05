@@ -13,5 +13,6 @@
 
 <!-- Slide N 14 -->
 <section>
-  <h1>Y con otras entidades externas</h1>
+  <h2>Y con otras entidades externas</h2>
+  <img src="/images/entities/all_entities_logos.png" alt="Logos entidades" class="r-stretch" />
 </section>
