@@ -13,6 +13,5 @@
 
 <!-- Slide N 14 -->
 <section>
-  <h1>Y con entidades externas</h1>
-  <h2 class="fragment">Cafeteria PCTG</h2>
+  <h1>Y con otras entidades externas</h1>
 </section>
