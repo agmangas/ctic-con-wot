@@ -32,7 +32,7 @@
 <!-- THIRD GAME, talk 0/1 -->
 <section>
   <h3>Y... ¿Cómo lo hacemos?</h3>
-  <h1 class="fragment">QUEMA EL SENSOR</h1>
+  <h1 class="fragment">Habla la máquina</h1>
 </section>
 
 <!-- Slide N 8 (0/1 goes to this slide)-->

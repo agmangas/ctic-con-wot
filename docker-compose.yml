@@ -14,6 +14,7 @@ services:
       MQTT_PORT: ${MQTT_PORT}
       MQTT_TRANSPORT: ${MQTT_TRANSPORT}
       MQTT_TOPICS: ${MOSQUITTO_TOPIC}
+      SLACK_BOT_SLIDE: ${SLACK_BOT_SLIDE}
     depends_on:
       - influx
       - mosquitto
@@ -50,6 +51,9 @@ services:
       TARGET_AVG_CLICKS: ${TARGET_AVG_CLICKS}
       TARGET_AVG_NOISE: ${TARGET_AVG_NOISE}
       TARGET_NUM_CLIENTS: ${TARGET_NUM_CLIENTS}
+      SENSORS_NEXT_SLIDE: ${SENSORS_NEXT_SLIDE}
+      BUTTON_NEXT_SLIDE: ${BUTTON_NEXT_SLIDE}
+      TEMPERATURE_NEXT_SLIDE: ${TEMPERATURE_NEXT_SLIDE}
     depends_on:
       - influx
       - mosquitto

@@ -17,7 +17,7 @@ warnings.simplefilter("ignore", MissingPivotFunction)
 _MQTT_WS_TRANSPORT = "websockets"
 _START = "-2m"
 _WINDOW_PERIOD = "10s"
-_ITER_SLEEP_SECS = 2.0
+_ITER_SLEEP_SECS = 1.5
 _TOPIC_CURRENT_STATS = "sensors-app/aggregated-stats"
 _TOPIC_ALERT = "sensors-app/alert"
 _TOPIC_SLIDES_COMMAND = "slides/command"
@@ -27,7 +27,9 @@ _KEY_NOISE = "noise"
 _KEY_ALERT_ACTIVE = "active"
 _KEY_ALERT_CURRENT = "current"
 _KEY_ALERT_TARGET = "target"
-_ENV_NEXT_SLIDE = "SENSORS_NEXT_SLIDE"
+_ENV_NEXT_SLIDE_SENSORS = "SENSORS_NEXT_SLIDE"
+_ENV_NEXT_SLIDE_BUTTON = "BUTTON_NEXT_SLIDE"
+_ENV_NEXT_SLIDE_TEMPERATURE = "TEMPERATURE_NEXT_SLIDE"
 
 _ARG_LOG_LEVEL = os.getenv("LOG_LEVEL", "DEBUG")
 _ARG_MQTT_HOST = os.getenv("MQTT_HOST", "localhost")
@@ -43,9 +45,24 @@ _ARG_TARGET_AVG_CLICKS = float(os.getenv("TARGET_AVG_CLICKS", 35))
 _ARG_TARGET_AVG_NOISE = float(os.getenv("TARGET_AVG_NOISE", 1.0))
 _ARG_TARGET_NUM_CLIENTS = float(os.getenv("TARGET_NUM_CLIENTS", 8))
 
-_ARG_NEXT_SLIDE_INDEX = (
-    int(os.getenv(_ENV_NEXT_SLIDE)) if os.getenv(_ENV_NEXT_SLIDE) else None
+_ARG_NEXT_SLIDE_SENSORS = (
+    int(os.getenv(_ENV_NEXT_SLIDE_SENSORS))
+    if os.getenv(_ENV_NEXT_SLIDE_SENSORS)
+    else None
 )
+
+_ARG_NEXT_SLIDE_BUTTON = (
+    int(os.getenv(_ENV_NEXT_SLIDE_BUTTON))
+    if os.getenv(_ENV_NEXT_SLIDE_BUTTON)
+    else None
+)
+
+_ARG_NEXT_SLIDE_TEMPERATURE = (
+    int(os.getenv(_ENV_NEXT_SLIDE_TEMPERATURE))
+    if os.getenv(_ENV_NEXT_SLIDE_TEMPERATURE)
+    else None
+)
+
 
 _logger = logging.getLogger(__name__)
 
@@ -176,6 +193,12 @@ def _get_alert_body(df, target, round_len=3, key_value="_value"):
     }
 
 
+async def _next_slide(mqtt_client, slide_idx, qos=2):
+    payload = {"method": "slide", "args": [slide_idx]}
+    _logger.info("Publishing to '%s': %s", _TOPIC_SLIDES_COMMAND, payload)
+    await mqtt_client.publish(_TOPIC_SLIDES_COMMAND, json.dumps(payload), qos=qos)
+
+
 async def _check_sensors(influx_client, mqtt_client, stats_qos=0, alert_qos=2):
     while True:
         df_orientation = await _query_orientation(influx_client=influx_client)
@@ -231,11 +254,61 @@ async def _check_sensors(influx_client, mqtt_client, stats_qos=0, alert_qos=2):
             all_alerts_active,
         )
 
-        if all_alerts_active and _ARG_NEXT_SLIDE_INDEX is not None:
-            await mqtt_client.publish(
-                _TOPIC_SLIDES_COMMAND,
-                json.dumps({"method": "slide", "args": [_ARG_NEXT_SLIDE_INDEX]}),
-                qos=alert_qos,
+        if all_alerts_active and _ARG_NEXT_SLIDE_SENSORS is not None:
+            await _next_slide(
+                mqtt_client=mqtt_client, slide_idx=_ARG_NEXT_SLIDE_SENSORS
+            )
+
+        await asyncio.sleep(_ITER_SLEEP_SECS)
+
+
+async def _check_button(influx_client, mqtt_client, start="-40s"):
+    while True:
+        query_api = influx_client.query_api()
+
+        df = await query_api.query_data_frame(
+            (
+                'from(bucket: "{bucket}") '
+                "|> range(start: {start}) "
+                '|> filter(fn: (r) => r["_measurement"] == "button") '
+                "|> limit(n: 1)"
+            ).format(
+                bucket=_ARG_INFLUX_BUCKET,
+                start=start,
+            )
+        )
+
+        _logger.debug("Button DataFrame:\n%s", df)
+
+        if not df.empty and _ARG_NEXT_SLIDE_BUTTON is not None:
+            await _next_slide(mqtt_client=mqtt_client, slide_idx=_ARG_NEXT_SLIDE_BUTTON)
+
+        await asyncio.sleep(_ITER_SLEEP_SECS)
+
+
+async def _check_temperature(influx_client, mqtt_client, start="-40s", threshold=35):
+    while True:
+        query_api = influx_client.query_api()
+
+        df = await query_api.query_data_frame(
+            (
+                'from(bucket: "{bucket}") '
+                "|> range(start: {start}) "
+                '|> filter(fn: (r) => r["_measurement"] == "temperature") '
+                '|> filter(fn: (r) => r["_field"] == "value") '
+            ).format(bucket=_ARG_INFLUX_BUCKET, start=start, threshold=threshold)
+        )
+
+        try:
+            df = df[df._value >= threshold]
+        except:
+            pass
+
+        _logger.debug("Temperature DataFrame:\n%s", df)
+
+        if not df.empty and _ARG_NEXT_SLIDE_TEMPERATURE is not None:
+            await _next_slide(
+                mqtt_client=mqtt_client, slide_idx=_ARG_NEXT_SLIDE_TEMPERATURE
             )
 
         await asyncio.sleep(_ITER_SLEEP_SECS)
@@ -281,6 +354,18 @@ async def _main():
         tasks.add(
             asyncio.create_task(
                 _check_sensors(influx_client=influx_client, mqtt_client=mqtt_client)
+            )
+        )
+
+        tasks.add(
+            asyncio.create_task(
+                _check_button(influx_client=influx_client, mqtt_client=mqtt_client)
+            )
+        )
+
+        tasks.add(
+            asyncio.create_task(
+                _check_temperature(influx_client=influx_client, mqtt_client=mqtt_client)
             )
         )
 

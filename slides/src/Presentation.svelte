@@ -58,7 +58,7 @@
     let command = JSON.parse(e.detail.command)
     console.log("MQTT Event! ")
     console.log(e)
-    if(command.method === "slide" && Math.abs(command.args[0]-previousIndexh)===1){
+    if(command.method === "slide" && (command.args[0]-previousIndexh)===1){
         console.log("Command method is "+command.method+" and the slide is the next or previous one (previous: "+previousIndexh+" | next: "+command.args[0]+"), so come on!")
         window.postMessage(e.detail.command)
     }
