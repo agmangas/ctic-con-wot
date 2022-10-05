@@ -16,7 +16,7 @@ mqttClient = MqttClient.create_from_environment()
 mqttClient.connect()
 # Settings
 TOPIC = os.environ.get("MQTT_TOPICS", "test") 
-SLIDE = os.environ.get("SLACK_BOT_SLIDE", 3) 
+SLIDE = os.environ.get("SLACK_BOT_SLIDE", 13) 
 EXPECTED_WORD="siguiente" # Hardcoded :)
 
 @blueprint.route("", methods=['POST'])
