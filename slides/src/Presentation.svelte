@@ -71,7 +71,7 @@
             <Intro/>
             <Team/>
             <Cat/>
-            <WoT/> 
+            <WoT {GRAFANA_URL}/> 
             <Collaboration/>
             <TeamGame {GRAFANA_URL}/>
             <FinishConclusions/>

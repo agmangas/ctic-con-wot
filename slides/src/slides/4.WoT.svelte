@@ -1,8 +1,20 @@
+<script>
+  //Take parameters
+  export let GRAFANA_URL;
+</script>
+
 <!-- Slide N 4 -->
 <!-- SECOND GAME, SENSOR -->
 <section data-background="#000FFF">
   <h3>¿Qué somos?</h3>
-  <h1 class="fragment">QUEMA EL SENSOR</h1>
+  <h2 class="fragment">QUEMA EL SENSOR</h1>
+    <iframe
+    title="Dashboard"
+    class="r-stretch"
+    src="{GRAFANA_URL}/dashboard-solo/new?orgId=1&from=1664998781565&to=1664999081565&panelId=2"
+    width="250"
+    frameborder="0"
+  />
 </section>
 
 <!-- Slide N 5 (Sensor goes to this slide)-->
