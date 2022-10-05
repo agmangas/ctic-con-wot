@@ -15,7 +15,7 @@ blueprint = Blueprint(BLUEPRINT_NAME, __name__)
 mqttClient = MqttClient.create_from_environment()
 mqttClient.connect()
 # Settings
-TOPIC = os.environ.get("MQTT_TOPICS", "test") 
+TOPIC = os.environ.get("MQTT_TOPICS", "slides/command") 
 SLIDE = os.environ.get("SLACK_BOT_SLIDE", 13) 
 EXPECTED_WORD="siguiente" # Hardcoded :)
 
