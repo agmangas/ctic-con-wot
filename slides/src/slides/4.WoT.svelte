@@ -49,7 +49,7 @@
 <section data-transition="convex">Ahora en serio blabla</section>
 
 <!-- Slide N 10 - FOURTH GAME, FLUTE-->
-<section data-transition="convex">
+<section data-transition="convex" data-background="#000FFF">
   <h3>¿Que cosas hacemos? 🎺</h3>
   <iframe
     title="Juego Flauta"
@@ -62,4 +62,14 @@
 </section>
 
 <!-- Slide N 11 - (Flute goes to this slide))-->
-<section data-transition="convex">Ejemplos de cosas que hacemos</section>
+<section data-transition="convex">
+  <h3>Ejemplos de cosas que hacemos</h3>
+  <ol>
+    <li>Sensórica</li>
+    <li>Arquitectura Software</li>
+    <li>Sistemas distribuidos</li>
+    <li>Gobernanza de datos</li>
+    <li>DevOps</li> 
+    <li>Y demasiadas cosas más</li> 
+  </ol>
+</section>
