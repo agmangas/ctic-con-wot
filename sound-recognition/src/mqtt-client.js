@@ -1,6 +1,6 @@
 import mqtt from "mqtt/dist/mqtt";
 
-const MQTT_URL = process.env.REACT_APP_MQTT_URL || "mqtt://localhost:9001";
+const MQTT_URL = process.env.REACT_APP_MQTT_URL || "wss://wotmqtt.test.ctic.es:443";
 const DIAPO_ID = 4;
 
 const mqttClient = mqtt.connect(MQTT_URL);
@@ -16,7 +16,7 @@ function disconnect() {
     mqttClient.end();
 }
 
-function next() {
+function next(n) {
     if (!mqttClient.connected) {
         console.log("MQTT CLIENT: Not connected to MQTT broker");
         return;
@@ -24,7 +24,7 @@ function next() {
 
     const infoToSend = {
         "method": "slide",
-        "args": [DIAPO_ID]
+        "args": [n]
     };
     console.log("MQTT CLIENT: Sending info:", infoToSend);
     mqttClient.publish(TOPIC_NEXT, JSON.stringify(infoToSend));

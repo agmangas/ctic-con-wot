@@ -26,7 +26,7 @@ class Flauta extends React.Component {
         // if the counter is 10, then stop listening
         if (this.state.counter === this.props.maxNumberOfHits) {
             soundRecognizer.end()
-            mqtt.next()
+            mqtt.next(11)
         }
     }
 

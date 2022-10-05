@@ -27,7 +27,7 @@ class Numeros extends React.Component {
         // stop condition defined in index.js
         if (this.state.ceros >= this.props.maxNumberOfHits.cero && this.state.unos >= this.props.maxNumberOfHits.uno) {
             soundRecognizer.end()
-            mqtt.next()
+            mqtt.next(8)
         }
         
     }
