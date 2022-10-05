@@ -6,7 +6,8 @@
 <!-- Slide N 15 -->
 <!-- TEAM GAME -->
 <section>
-  <h3>Salvemos a Wotito</h3>
+  <h6>Salvemos a Wotito</h6>
+  <small style="font-family: monospace">https://wotapp.test.ctic.es</small>
   <iframe
     title="Dashboard"
     class="r-stretch"
