@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>¡Botones a pulsar!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="">
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: sans-serif;
+        }
+        button {
+            background-color: #fff;
+            color: #000;
+            font-size: 2em;
+            padding: 1em;
+            margin: 1em;
+            border: none;
+            border-radius: 0.5em;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <button onclick="play(0)">Play 0</button>
+    <button onclick="play(1)">Play 1</button>
+
+    <script>
+        function play(n) {
+            if (n)
+                var file = 'raw/uno.mp3';
+            else
+                var file = 'raw/cero2.mp3'
+
+            var audio = new Audio(file);
+            audio.play();
+        }
+    </script>
+</body>
+
+</html>
