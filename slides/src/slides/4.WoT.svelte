@@ -31,7 +31,9 @@
 <!-- THIRD GAME, talk 0/1 -->
 <section>
   <h3>Y... ¿Cómo lo hacemos?</h3>
-  <h1 class="fragment">Aquí había un evento pero se nos iba de tiempo ⏱️</h1>
+  <h1 class="fragment">
+    <i>Aquí había un evento pero se nos iba de tiempo ⏱️</i>
+  </h1>
 </section>
 
 <!-- Slide N 8 (0/1 goes to this slide)-->
@@ -40,7 +42,7 @@
   <section>Paso 2: Buscamos una solución al problema</section>
   <section>Paso 3: No la encontramos</section>
   <section>Paso 4: Preguntamos a Andrés</section>
-  <section>Paso 5: El problema esta solucionado.</section>
+  <section>Paso 5: El problema está solucionado.</section>
 </section>
 
 <!-- Slide N 9 -->
