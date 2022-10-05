@@ -6,7 +6,7 @@
     { name: 'Santi', img: "/images/slack/Santi.png", traits: [
       'El del sótano', 'Cacharrea con cosas', 'Baja cosas a tierra'
     ]},
-    { name: 'Dani', img: "/images/slack/Dani.png", traits: [
+    { name: 'Dani', img: "/images/slack/Dani.gif", traits: [
       'Microcontroladores en Peón', 'Cosas puntiagudas', 'Lamentamos su pérdida (hoy no está 😢)'
     ]},
     { name: 'Aser', img: "/images/slack/Aser.png", traits: [
