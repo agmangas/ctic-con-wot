@@ -49,7 +49,7 @@
 <section data-transition="convex">Ahora en serio blabla</section>
 
 <!-- Slide N 10 - FOURTH GAME, FLUTE-->
-<section data-transition="convex" data-background="000FFF">
+<section data-transition="convex" data-background="#000FFF">
   <h3>¿Que cosas hacemos? 🎺</h3>
   <iframe
     title="Juego Flauta"

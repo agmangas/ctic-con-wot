@@ -1,6 +1,6 @@
 <!-- Slide N 12 -->
 <!-- FIFTH GAME -->
-<section data-background="000FFF">
+<section data-background="#000FFF">
   <h3>Colaboramos con otra gente</h3>
   <h1 class="fragment">SLACK 🤖</h1>
 </section>

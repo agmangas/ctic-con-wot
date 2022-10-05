@@ -31,7 +31,7 @@
 
 <!-- Slide N 1 -->
 <!-- FIRST GAME, BUTTON --> 
-<section data-background="000FFF">
+<section data-background="#000FFF"> data-background="#00ffff"
   <h1>¿Quienés somos?</h1>
   <h1>😎</h1>
 </section>
