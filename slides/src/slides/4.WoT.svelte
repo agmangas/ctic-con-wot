@@ -7,8 +7,8 @@
 <!-- SECOND GAME, SENSOR -->
 <section data-background="#000FFF">
   <h3>¿Qué somos?</h3>
-  <h2 class="fragment">QUEMA EL SENSOR</h1>
-    <iframe
+  <h2 class="fragment">QUEMA EL SENSOR</h2>
+  <iframe
     title="Dashboard"
     class="r-stretch"
     src="{GRAFANA_URL}/dashboard-solo/new?orgId=1&from=1664998781565&to=1664999081565&panelId=2"
@@ -59,10 +59,8 @@
 
 <!-- Slide N 9 -->
 <section data-transition="convex">
-  Ahora en serio. 
-  <div class="fragment fade-in">
-    Le preguntamos a Andrés
-  </div>
+  Ahora en serio.
+  <div class="fragment fade-in">Le preguntamos a Andrés</div>
 </section>
 
 <!-- Slide N 10 - FOURTH GAME, FLUTE-->
@@ -87,7 +85,7 @@
     <li>Sistemas distribuidos</li>
     <li>Edge computing</li>
     <li>Gobernanza de datos</li>
-    <li>DevOps</li> 
-    <li>Y demasiadas cosas más</li> 
+    <li>DevOps</li>
+    <li>Y demasiadas cosas más</li>
   </ol>
 </section>
