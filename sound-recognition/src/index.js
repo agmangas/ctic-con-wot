@@ -11,8 +11,8 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 const urlModelFlauta = `${window.location.origin}/flauta/model/`;
 const urlModelNumeros = `${window.location.origin}/numeros/model/`;
 
-const flautaMaxNumberOfHits = 10;
-const numerosMaxNumberOfHits = {cero: 3, uno: 5};
+const flautaMaxNumberOfHits = 6;
+const numerosMaxNumberOfHits = {cero: 2, uno: 3};
 
 root.render(
     <React.StrictMode>
