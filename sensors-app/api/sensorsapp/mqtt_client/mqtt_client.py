@@ -49,13 +49,15 @@ class MqttClient():
                 logging.warning("Failed to connect, return code %d\n", rc)
 
         try:
+            logging.info("Lets connect to MQTT Broker!")
             #self._client.username_pw_set(username, password)
             self._client.on_connect = on_connect
-            if(self.transport=="websockets"):
-                self._client.tls_set()
+            #if(self.transport=="websockets"):
+            #    self._client.tls_set()
             self._client.connect(self.broker, self.port)
 
             #Subscribe
+            logging.info("Lets suscribe to topics!")
             self._subscribe(topic_to_subscribe)
             return True
             
@@ -121,5 +123,6 @@ class MqttClient():
             },
             "topics": topics
         }
+        logging.info("-----> LETS CREATE MQTT CLIENT")
         logging.info(data)
         return MqttClient(**data)
