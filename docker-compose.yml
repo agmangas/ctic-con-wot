@@ -53,6 +53,7 @@ services:
       TARGET_NUM_CLIENTS: ${TARGET_NUM_CLIENTS}
       SENSORS_NEXT_SLIDE: ${SENSORS_NEXT_SLIDE}
       BUTTON_NEXT_SLIDE: ${BUTTON_NEXT_SLIDE}
+      TEMPERATURE_NEXT_SLIDE: ${TEMPERATURE_NEXT_SLIDE}
     depends_on:
       - influx
       - mosquitto
