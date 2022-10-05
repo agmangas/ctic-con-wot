@@ -47,7 +47,16 @@
 <section data-transition="convex">Ahora en serio blabla</section>
 
 <!-- Slide N 10 - FOURTH GAME, FLUTE-->
-<section data-transition="convex">¿Que cosas hacemos? Flauta</section>
+<section data-transition="convex">
+  <h3>¿Que cosas hacemos? 🎺</h3>
+  <iframe
+    title="Juego Flauta"
+    class="r-stretch"
+    src="https://wotsound.test.ctic.es/flauta/"
+    width="250"
+    frameborder="0"
+  />
+</section>
 
 <!-- Slide N 11 - (Flute goes to this slide))-->
 <section data-transition="convex">Ejemplos de cosas que hacemos</section>
