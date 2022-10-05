@@ -295,8 +295,7 @@ async def _check_temperature(influx_client, mqtt_client, start="-40s", threshold
                 'from(bucket: "{bucket}") '
                 "|> range(start: {start}) "
                 '|> filter(fn: (r) => r["_measurement"] == "temperature") '
-                '|> filter(fn: (r) => r["_field"] == "value" and r["_value"] >= ${threshold}) '
-                "|> limit(n: 1)"
+                '|> filter(fn: (r) => r["_field"] == "value") '
             ).format(bucket=_ARG_INFLUX_BUCKET, start=start, threshold=threshold)
         )
 
