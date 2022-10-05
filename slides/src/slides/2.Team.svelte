@@ -97,7 +97,7 @@
         <h3 class="fragment fade-in">Y es muy mono</h3>
       </div>
       <div class="col">
-        <img src="/images/slack/Wotito.png" alt="EL GATO" class="r-stretch" />
+        <img src="/images/slack/Wotito.jpg" alt="EL GATO" class="r-stretch" />
       </div>
     </div>
   </section>
