@@ -2,7 +2,7 @@
 <!-- FIFTH GAME -->
 <section>
   <h3>Colaboramos con otra gente</h3>
-  <h1 class="fragment">SLACK</h1>
+  <h1 class="fragment">SLACK 🤖</h1>
 </section>
 
 <!-- Slide N 13 (Slack bot goes to this slide)-->

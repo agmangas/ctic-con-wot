@@ -1,4 +1,3 @@
-
 <!-- Slide N 2 -->
 <section>
   <h1 class="fragment step-fade-in-then-out">EL EQUIPO</h1>
@@ -14,28 +13,28 @@
 
   <section>
     <h1 class="fragment fade-in">Santi</h1>
-    <h2 class="fragment fade-in">El del sotano</h2>
+    <h2 class="fragment fade-in">El del sótano</h2>
     <h3 class="fragment fade-in">Cacharrea con cosas</h3>
-    <h3 class="fragment fade-in">Baja cosas a tierras</h3>
+    <h3 class="fragment fade-in">Baja cosas a tierra</h3>
   </section>
 
   <section>
     <h1 class="fragment fade-in">Dani</h1>
-    <h2 class="fragment fade-in">Microcontroladores en Peon</h2>
+    <h2 class="fragment fade-in">Microcontroladores en Peón</h2>
     <h3 class="fragment fade-in">Cosas puntiagudas</h3>
-    <h3 class="fragment fade-in">Lamentamos su perdida (hoy no esta 😢 )</h3>
+    <h3 class="fragment fade-in">Lamentamos su pérdida (hoy no está 😢)</h3>
   </section>
 
   <section>
     <h1 class="fragment fade-in">Aser</h1>
-    <h2 class="fragment fade-in">El otro de Peon</h2>
+    <h2 class="fragment fade-in">El otro de Peón</h2>
     <h3 class="fragment fade-in">Lo que haya en la pila</h3>
-    <h3 class="fragment fade-in">Chaquetero (esta en visión)</h3>
+    <h3 class="fragment fade-in">Chaquetero (esta en Inmersivas)</h3>
   </section>
 
   <section>
     <h1 class="fragment fade-in">Javi</h1>
-    <h2 class="fragment fade-in">El ex becario</h2>
+    <h2 class="fragment fade-in">El ex-becario</h2>
     <h3 class="fragment fade-in">Desarrollo de software</h3>
     <h3 class="fragment fade-in">Intentar ser Andrés</h3>
   </section>
@@ -50,7 +49,7 @@
   <section>
     <h1 class="fragment fade-in">Wotito</h1>
     <h2 class="fragment fade-in">El jefe de WoT en la sombra</h2>
-    <h3 class="fragment fade-in">Si, es un gatito</h3>
+    <h3 class="fragment fade-in">Sí, es un gatito 🐱</h3>
     <h3 class="fragment fade-in">Y es muy mono</h3>
   </section>
 </section>
