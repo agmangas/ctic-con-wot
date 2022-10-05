@@ -52,8 +52,8 @@ class MqttClient():
             logging.info("Lets connect to MQTT Broker!")
             #self._client.username_pw_set(username, password)
             self._client.on_connect = on_connect
-            #if(self.transport=="websockets"):
-            #    self._client.tls_set()
+            if(self.transport=="websockets"):
+                self._client.tls_set()
             self._client.connect(self.broker, self.port)
 
             #Subscribe
