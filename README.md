@@ -1,4 +1,4 @@
-# CTIC-CON WoT
+# CTIC-CON'22: Web of Things Team
 
 Servicios para la presentación de WoT en la CTIC-CON 2022.
 
